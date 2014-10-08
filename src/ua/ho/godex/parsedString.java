@@ -37,6 +37,7 @@ public class parsedString {
     public ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
     public ArrayList<Character> dii = new ArrayList<>();       // array of do
     public ArrayList<Spec> simbols = new ArrayList<>();
+    public ArrayList<String> ressultarray =new ArrayList<>();
     public Integer intResult = new Integer(0);
     public String strResult = new String();//result string
     public String inputString;
@@ -71,16 +72,18 @@ public class parsedString {
             charinc(0);
             copyStrToInt();
             if(this.mathResult().intValue()==intResult) {
-                simbols.forEach(new Consumer<Spec>() {
+                /*simbols.forEach(new Consumer<Spec>() {
                     @Override
                     public void accept(Spec spec) {
                         System.out.print(spec.getCharacter() + "=" + spec.getValue() + "|");
                     }
-                });
+                });*/
+
                 System.out.print("\n");
                 System.out.println(inputString + "->" + intString + "==" + this.mathResult());
-                System.out.print("----------------------\n");
-            }
+                ressultarray.add(inputString + "->" + intString + "==" + this.mathResult());
+                System.out.print("----------------------\n");/**/
+            }/**/
         }
         //System.exit(1);
     }
