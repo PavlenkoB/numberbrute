@@ -1,27 +1,100 @@
 package ua.ho.godex;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.function.Consumer;
 
 /**
  * Created by tf101 on 05.10.14.
  */
 public class parsedString {
+    class Spec {
+        private Character character;
+        private Integer value;
+
+        Spec(Character character, Integer value) {
+            this.character = character;
+            this.value = value;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+
+        public Character getCharacter() {
+            return character;
+        }
+
+        public void setCharacter(Character character) {
+            this.character = character;
+        }
+    }
+
     public ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
     public ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
     public ArrayList<Character> dii = new ArrayList<>();       // array of do
-    public TreeMap<Character,Integer> simbols= new TreeMap<>();
+    public ArrayList<Spec> simbols = new ArrayList<>();
     public Integer intResult = new Integer(0);
-    public String strResult = new String();
-    public ArrayList<Character> charResult = new ArrayList<>(); //result string
-    public boolean debug = true;
+    public String strResult = new String();//result string
+    public String inputString;
+    String intString;
+    public Type type;
 
-    public static enum Type {CHAR, NUMBER};
+    public boolean debug = false;
+
+    public static enum Type {CHAR, NUMBER}
+
+    ;
 
 
     public parsedString() {
     }
+
+    private void charinc(Integer index) {
+        simbols.get(index).setValue(simbols.get(index).getValue()+1);
+        if (simbols.get(index).getValue() > 9 && (index<simbols.size()-1)) {
+            simbols.get(index).setValue(0);
+            charinc(index+1);
+        }
+        for (int pos=0;pos<simbols.size();pos++){
+            if (simbols.get(index).getValue()==simbols.get(pos).getValue() && index!=pos){
+                charinc(index);
+            }
+        }
+    }
+
+    public void mathResultstr() {
+        while (simbols.get(simbols.size()-1).getValue()<10){
+            charinc(0);
+            copyStrToInt();
+            if(this.mathResult().intValue()==intResult) {
+                simbols.forEach(new Consumer<Spec>() {
+                    @Override
+                    public void accept(Spec spec) {
+                        System.out.print(spec.getCharacter() + "=" + spec.getValue() + "|");
+                    }
+                });
+                System.out.print("\n");
+                System.out.println(inputString + "->" + intString + "==" + this.mathResult());
+                System.out.print("----------------------\n");
+            }
+        }
+        System.exit(1);
+    }
+
+    private void copyStrToInt(){//copy array of char numbers to integer with replace
+        String tmpstr =new String(this.inputString);
+                for(int sim=0;sim<simbols.size();sim++){
+                    tmpstr=tmpstr.replace(simbols.get(sim).getCharacter(),simbols.get(sim).getValue().toString().charAt(0));
+                }
+        intString=tmpstr;
+        sliseintstring(tmpstr);
+
+    }
+
 
     public Double mathResult() {
         int pos = 0;
@@ -35,8 +108,8 @@ public class parsedString {
                 }
                 spec = true;
                 if (debug)
-                    System.out.println(diya + " *>"  + tmpdouble + "*" + numbers.get(diya + 1)+"="+(tmpdouble * numbers.get(diya + 1)));
-                tmpdouble=tmpdouble*numbers.get(diya + 1);
+                    System.out.println(diya + " *>" + tmpdouble + "*" + numbers.get(diya + 1) + "=" + (tmpdouble * numbers.get(diya + 1)));
+                tmpdouble = tmpdouble * numbers.get(diya + 1);
             }
             if (dii.get(diya) == '/') {
                 if (spec == false) {
@@ -45,16 +118,16 @@ public class parsedString {
                 }
                 spec = true;
                 if (debug)
-                    System.out.println(diya + " />"  + tmpdouble + "/" + numbers.get(diya + 1)+"="+(tmpdouble / numbers.get(diya + 1)));
-                tmpdouble =tmpdouble/ numbers.get(diya + 1);
+                    System.out.println(diya + " />" + tmpdouble + "/" + numbers.get(diya + 1) + "=" + (tmpdouble / numbers.get(diya + 1)));
+                tmpdouble = tmpdouble / numbers.get(diya + 1);
             }
-            if (dii.get(diya) == '+' || dii.get(diya) == '-') {
+            if ((dii.get(diya) == '+' || dii.get(diya) == '-') && spec == true) {
                 numbers.set(pos, tmpdouble);
-                spec=false;
+                spec = false;
             }
-            if(diya+1 == dii.size()) {
+            if (diya + 1 == dii.size() && spec == true) {
                 numbers.set(pos, tmpdouble);
-                spec=false;
+                spec = false;
             }
         }
         Double ret = new Double(numbers.get(0));
@@ -71,26 +144,33 @@ public class parsedString {
             }
         }
         return ret;
-    };
+    }
+
+    private void sliseintstring(String string){
+        StringBuilder tmpstr = new StringBuilder("");
+        numbers.clear();
+        dii.clear();
+        for (int pos = 0; pos < string.length(); pos++) {
+            if (string.charAt(pos) == '+' || string.charAt(pos) == '-' || string.charAt(pos) == '=' || string.charAt(pos) == '*' || string.charAt(pos) == '/') {
+                if (tmpstr.length() > 0) {
+                    numbers.add(Double.parseDouble(tmpstr.toString()));
+                    tmpstr = new StringBuilder("");
+                }
+                dii.add(string.charAt(pos));
+            } else {
+                tmpstr.append(string.charAt(pos));// add to end of string
+            }
+        }
+        if (tmpstr.length() > 0)
+            //numbers.add(Double.parseDouble(tmpstr.toString()));
+            intResult=Integer.parseInt(tmpstr.toString());
+    }
 
     public parsedString(String string, Type type) {
-
+        this.inputString=string;
+        this.type = type;
         if (type == Type.NUMBER) {
-            StringBuilder tmpstr = new StringBuilder("");
-            for (int pos = 0; pos < string.length(); pos++) {
-                if (string.charAt(pos) == '+' || string.charAt(pos) == '-' || string.charAt(pos) == '=' || string.charAt(pos) == '*' || string.charAt(pos) == '/') {
-                    if (tmpstr.length() > 0) {
-                        numbers.add(Double.parseDouble(tmpstr.toString()));
-                        tmpstr = new StringBuilder("");
-                    }
-                    dii.add(string.charAt(pos));
-                } else {
-                    tmpstr.append(string.charAt(pos));// add to end of string
-                }
-            }
-            if (tmpstr.length() > 0)
-                numbers.add(Double.parseDouble(tmpstr.toString()));
-//            intResult=Integer.parseInt(tmpstr.toString());
+            sliseintstring(string);
         }
         if (type == Type.CHAR) {
             StringBuilder tmpstr = new StringBuilder("");//number string
@@ -106,19 +186,24 @@ public class parsedString {
                     tmpstr.append(string.charAt(pos));// add to end of string
                 }
             }
-            if(tmpstr.length()>0)
-                strResult=tmpstr.toString();
-                numbersStr.add(tmpstr.toString());
+            if (tmpstr.length() > 0)
+                strResult = tmpstr.toString();
+            numbersStr.add(tmpstr.toString());
             //sobraty simvolu
-            for(int che=0;che<numbersStr.size();che++){
-                for(int pos=0;pos<numbersStr.get(che).length();pos++){
-                    if(!simbols.containsKey(numbersStr.get(che).charAt(pos))){
-                        simbols.put(numbersStr.get(che).charAt(pos), 0);
+             ArrayList<Character> allchar = new ArrayList<>();       // array of do
+            for (int che = 0; che < numbersStr.size(); che++) {
+                for (int pos = 0; pos < numbersStr.get(che).length(); pos++) {
+                    if (!allchar.contains(numbersStr.get(che).charAt(pos))) {
+                        allchar.add(numbersStr.get(che).charAt(pos));
                     }
                 }
             }
+            for(Character character : allchar){
+               simbols.add(new Spec(character,0));
+            }
+
             //delete result from numbers
-            numbersStr.remove(numbersStr.size()-1);
+            numbersStr.remove(numbersStr.size() - 1);
         }
     }
 }

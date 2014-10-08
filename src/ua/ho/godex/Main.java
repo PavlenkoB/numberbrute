@@ -10,9 +10,10 @@ public class Main {
         Integer var=1;
         while(true) {
             System.out.print("1)standart\n2)super(under work)\n0)exit\n");
-            var = console.nextInt();
+            var =2;
+            //var = console.nextInt();
 
-            console.nextLine();
+            //console.nextLine();
             if (var == 1) {
                 while (true) {
                     console.reset();
@@ -27,9 +28,11 @@ public class Main {
                 }
             }
             if (var == 2) {
-                System.out.println("\nInput vuraz");
-                String vuraz = console.nextLine();
+                System.out.println("\nInput vuraz a+b=c");
+                String vuraz = "sin+sin+cos=tang";//console.nextLine();
+
                 parsedString res = new parsedString(vuraz, parsedString.Type.CHAR);
+                res.mathResultstr();
                 System.out.println("math:" + vuraz + "=" + "???");
             }
             if (var == 0) {
