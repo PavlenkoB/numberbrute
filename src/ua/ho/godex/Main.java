@@ -29,11 +29,12 @@ public class Main {
             }
             if (var == 2) {
                 System.out.println("\nInput vuraz a+b=c");
-                String vuraz = "sin+sin+cos=tang";//console.nextLine();
-
+                String vuraz = console.nextLine();
+                long timer=System.currentTimeMillis();
                 parsedString res = new parsedString(vuraz, parsedString.Type.CHAR);
                 res.mathResultstr();
-                System.out.println("math:" + vuraz + "=" + "???");
+
+                System.out.println("time="+(System.currentTimeMillis()-timer));
             }
             if (var == 0) {
                 break;

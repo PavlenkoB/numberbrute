@@ -82,7 +82,7 @@ public class parsedString {
                 System.out.print("----------------------\n");
             }
         }
-        System.exit(1);
+        //System.exit(1);
     }
 
     private void copyStrToInt(){//copy array of char numbers to integer with replace
