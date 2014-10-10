@@ -198,11 +198,14 @@ public class parsedString {
                 for (int pos = 0; pos < numbersStr.get(che).length(); pos++) {
                     if (!allchar.contains(numbersStr.get(che).charAt(pos))) {
                         allchar.add(numbersStr.get(che).charAt(pos));
+                        if(pos==0) {
+                            simbols.add(new Spec(numbersStr.get(che).charAt(pos), 1));
+                        }else{
+                            simbols.add(new Spec(numbersStr.get(che).charAt(pos), 0));
+                        }
                     }
+                    //todo problems withe zeros
                 }
-            }
-            for(Character character : allchar){
-               simbols.add(new Spec(character,0));
             }
 
             //delete result from numbers

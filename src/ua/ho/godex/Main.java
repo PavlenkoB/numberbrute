@@ -7,17 +7,17 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner console=new Scanner(System.in);
-        Integer var=1;
+        Integer var=0;
         while(true) {
-            System.out.print("1)standart\n2)super(under work)\n0)exit\n");
-            var =2;
-            //var = console.nextInt();
+            System.out.println("Created by G0DE][\nbrute logic exicaysis");
+            System.out.print("1)standart\n0)exit\n");
+            var = console.nextInt();
 
-            //console.nextLine();
-            if (var == 1) {
+            console.nextLine();
+            if (var == -1) {//hidden don't work
                 while (true) {
                     console.reset();
-                    System.out.println("Input vuraz");
+                    System.out.println("Input vuraz (something like this '2+4+6+7')");
                     //String vuraz=   "2+3*2";     //console.nextLine();
                     String vuraz = console.nextLine();
                     if (vuraz.equals("e"))
@@ -27,9 +27,10 @@ public class Main {
                     System.out.println("math:" + vuraz + "=" + res.mathResult());
                 }
             }
-            if (var == 2) {
-                System.out.println("\nInput vuraz a+b=c");
-                String vuraz = console.nextLine();
+            if (var == 1) {
+                System.out.println("\nInput vuraz (something like this 'a+b=c')");
+                String vuraz;// = "a+fat=ass";
+                       vuraz= console.nextLine();
                 long timer=System.currentTimeMillis();
                 parsedString res = new parsedString(vuraz, parsedString.Type.CHAR);
                 res.mathResultstr();
