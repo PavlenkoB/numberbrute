@@ -170,6 +170,7 @@ public class parsedString {
     }
 
     public parsedString(String string, Type type) {
+        string=string.toLowerCase();
         this.inputString=string;
         this.type = type;
         if (type == Type.NUMBER) {
