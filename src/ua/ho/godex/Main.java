@@ -22,7 +22,7 @@ public class Main {
                     String vuraz = console.nextLine();
                     if (vuraz.equals("e"))
                         break;
-                    parsedString res = new parsedString(vuraz, parsedString.Type.NUMBER);
+                    parsedString res = new parsedString(vuraz, parsedString.Type.NUMBER,true);
 
                     System.out.println("math:" + vuraz + "=" + res.mathResult());
 
@@ -34,7 +34,7 @@ public class Main {
                 String vuraz = "гол*гол=футбол";
                 //vuraz=console.nextLine();
                 long timer=System.currentTimeMillis();
-                parsedString res = new parsedString(vuraz, parsedString.Type.CHAR);
+                parsedString res = new parsedString(vuraz, parsedString.Type.CHAR,true);
                 res.mathResultstr();
                 System.out.println("time="+(System.currentTimeMillis()-timer));
             }
