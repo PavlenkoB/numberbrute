@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by tf101 on 05.10.14.
  */
 public class parsedString {
-    class Spec {
+    public class Spec {
         private Character character;
 
         public boolean isNotZero() {
@@ -45,17 +45,17 @@ public class parsedString {
         }
     }
 
-    private ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
-    private ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
-    private ArrayList<Character> actions = new ArrayList<>();       // array of do
-    private ArrayList<Spec> simbols = new ArrayList<>();
-    private Double intResult;//result string
-    private ArrayList<Integer> lastNumbers = new ArrayList<>();// last number of numeric
-    private String intString;// result string after replace
+    public ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
+    public ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
+    public ArrayList<Character> actions = new ArrayList<>();       // array of do
+    public ArrayList<Spec> simbols = new ArrayList<>();
+    public Double intResult;//result string
+    public ArrayList<Integer> lastNumbers = new ArrayList<>();// last number of numeric
+    public String intString;// result string after replace
 
-    private boolean allAnswers = true;
+    public boolean allAnswers = true;
 
-    private Integer progress = 0;
+    public Integer progress = 0;
 
     public ArrayList<String> ressultarray = new ArrayList<>();
     public String strResult = new String();
@@ -90,7 +90,7 @@ public class parsedString {
     public parsedString() {
     }
 
-    private void charinc(Integer index) {
+    public void charinc(Integer index) {
         simbols.get(index).setValue(simbols.get(index).getValue() + 1);
         if (simbols.get(index).getValue() > 9 && (index < simbols.size() - 1)) {
             if (simbols.get(index).isNotZero())
@@ -149,7 +149,7 @@ public class parsedString {
     /**
      * convert string with characters to string with numbers and slice ut
      */
-    private void copyStrToInt() {//copy array of char numbers to integer with replace
+    public void copyStrToInt() {//copy array of char numbers to integer with replace
         intString = inputString;
         for (int sim = 0; sim < simbols.size(); sim++) {
             intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValue().toString().charAt(0));
