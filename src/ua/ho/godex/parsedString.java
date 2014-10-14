@@ -55,7 +55,7 @@ public class parsedString {
 
     public boolean allAnswers = true;
 
-    public Integer progress = 0;
+    public Double progress = new Double(0);
 
     public ArrayList<String> ressultarray = new ArrayList<>();
     public String strResult = new String();
@@ -107,6 +107,7 @@ public class parsedString {
     }
 
     public void mathResultstr() {
+        StringBuilder stringBuilder;
         Double full = Math.pow(10, simbols.size());
         while (simbols.get(simbols.size() - 1).getValue() < 10) {
             progress++;
@@ -139,7 +140,12 @@ public class parsedString {
                 }
             }*/
             //iteration++;
-            if (this.mathResult().equals(intResult)) {
+            if (this.mathResult().equals(intResult)) {stringBuilder=new StringBuilder();
+                for (Spec spec : simbols) {
+                    stringBuilder.append(spec.getCharacter()+":"+spec.getValue()+"|");
+                }
+
+                ressultarray.add(stringBuilder.toString());
                 ressultarray.add(inputString + "->" + intString);
             }/**/
         }

@@ -20,6 +20,7 @@ public class numberbrute extends Activity {
     TextView progressText;
     ProgressBar progressBar;
     CheckBox allRes;
+    Button run;
 
     private Handler mHandler = new Handler();
 
@@ -33,6 +34,7 @@ public class numberbrute extends Activity {
         console = (EditText) findViewById(R.id.console);
         inputtext = (EditText) findViewById(R.id.inputtext);
         allRes = (CheckBox) findViewById(R.id.allRes);
+        run=(Button) findViewById(R.id.run);
     }
 
     public void brute(View view) {
@@ -49,17 +51,19 @@ public class numberbrute extends Activity {
         }
     };
 
-    class calculate extends AsyncTask<Void, ArrayList<Spec>,Void> {
+    class calculate extends AsyncTask<Void, Object,Void> {
         long timer;
         StringBuilder stringBuilder = new StringBuilder();
         parsedString res;
         String vuraz;
         boolean allResTmp;
-        Double full;
+        Integer full;
 
 
         @Override
         protected void onPreExecute() {
+            run.setEnabled(false);
+
             vuraz = inputtext.getText().toString();
 
             timer = System.currentTimeMillis();
@@ -71,14 +75,14 @@ public class numberbrute extends Activity {
         protected Void doInBackground(Void... voids) {
             res = new parsedString(vuraz, parsedString.Type.CHAR, allResTmp);
 
-            full = Math.pow(10, res.simbols.size());
+            full = ((Number) Math.pow(10, res.simbols.size())).intValue();
             while (res.simbols.get(res.simbols.size() - 1).getValue() < 10) {
-                //res.progress++;
+                res.progress++;
                 if (res.ressultarray.size() != 0 && !res.allAnswers) {
                     break;
                 }
                 res.charinc(0);
-                publishProgress(res.simbols);
+                publishProgress(res.simbols,full,res.progress);
                 boolean colision = false;
                 for (Spec spec : res.simbols) {
                     for (Spec spec1 : res.simbols) {
@@ -95,6 +99,12 @@ public class numberbrute extends Activity {
                 res.copyStrToInt();
                 //iteration++;
                 if (res.mathResult().equals(res.intResult)) {
+                    stringBuilder=new StringBuilder();
+                    for (Spec spec : res.simbols) {
+                        stringBuilder.append(spec.getCharacter()+":"+spec.getValue()+"|");
+                    }
+
+                    res.ressultarray.add(stringBuilder.toString());
                     res.ressultarray.add(res.inputString + "->" + res.intString);
                 }/**/
             }
@@ -102,14 +112,14 @@ public class numberbrute extends Activity {
         }
 
         @Override
-        protected void onProgressUpdate(ArrayList<Spec>... values) {
+        protected void onProgressUpdate(Object[] values) {
             super.onProgressUpdate(values);
-            ArrayList<Spec> specs=values[0];
+            /*ArrayList<Spec> specs= (ArrayList<Spec>) values[0];
             stringBuilder = new StringBuilder();
             for (Spec spec : specs)
                 stringBuilder.append(spec.getValue());
-            progressText.setText(stringBuilder.toString());
-            progressBar.setProgress((int) (full/Integer.parseInt(stringBuilder.toString())/100));
+            progressText.setText(stringBuilder.toString());*/
+            progressBar.setProgress((int) (res.progress/full*100));
 
         }
 
@@ -120,8 +130,9 @@ public class numberbrute extends Activity {
             for (String s : res.ressultarray) {
                 stringBuilder.append(s + "\n");
             }
-            progressText.setText("Results="+res.ressultarray.size());
+            progressText.setText("Results="+res.ressultarray.size()/2);
             console.setText(stringBuilder + "\n" + "time=" + (System.currentTimeMillis() - timer));/**/
+            run.setEnabled(true);
         }
     }
 }
