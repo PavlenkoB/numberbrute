@@ -9,12 +9,11 @@ package ua.ho.godex;
 public class test {
     public static void main(String[] args) {
         long timer=System.currentTimeMillis();
-        parsedString res = new parsedString("КОКА+КОЛА=ВОДА", parsedString.Type.CHAR,false);
+        parsedString res = new parsedString("ОДИН+ОДИН=МНОГО", parsedString.Type.CHAR,false);
         res.mathResultstr();
         System.out.println("time="+(System.currentTimeMillis()-timer));
         for (String string:res.ressultarray){
             System.out.println(string);
         }
-
     }
 }

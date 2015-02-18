@@ -1,49 +1,11 @@
 package ua.ho.godex;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 /**
  * Created by tf101 on 05.10.14.
  */
 public class parsedString {
-    public class Spec {
-        private Character character;
-
-        public boolean isNotZero() {
-            return notZero;
-        }
-
-        public void setNotZero(boolean notZero) {
-            this.notZero = notZero;
-        }
-
-        private boolean notZero;
-        private Integer value;
-
-        Spec(@NotNull Character character, @NotNull Integer value, boolean notZero) {
-            this.character = character;
-            this.value = value;
-            this.notZero = notZero;
-        }
-
-        public Integer getValue() {
-            return value;
-        }
-
-        public void setValue(Integer value) {
-            this.value = value;
-        }
-
-        public Character getCharacter() {
-            return character;
-        }
-
-        public void setCharacter(Character character) {
-            this.character = character;
-        }
-    }
 
     public ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
     public ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
@@ -71,8 +33,6 @@ public class parsedString {
 
     public static enum Type {CHAR, NUMBER}
 
-    ;
-
     /**
      * 0=mixed
      * 1=+
@@ -83,8 +43,6 @@ public class parsedString {
     public static enum mathOper {
         MIXED, PLUS, MINUS, MULTIPLY, DIVIDE
     }
-
-    ;
 
 
     public parsedString() {
@@ -114,6 +72,7 @@ public class parsedString {
             if (ressultarray.size() != 0 && !allAnswers) {
                 break;
             }
+
             charinc(0);
             boolean colision = false;
             for (Spec spec : simbols) {
@@ -126,6 +85,7 @@ public class parsedString {
                 if (colision)
                     break;
             }
+
             if (colision)
                 continue;
             copyStrToInt();
@@ -140,11 +100,11 @@ public class parsedString {
                 }
             }*/
             //iteration++;
-            if (this.mathResult().equals(intResult)) {stringBuilder=new StringBuilder();
+            if (this.mathResult().equals(intResult)) {
+                stringBuilder = new StringBuilder();
                 for (Spec spec : simbols) {
-                    stringBuilder.append(spec.getCharacter()+":"+spec.getValue()+"|");
+                    stringBuilder.append(spec.getCharacter() + ":" + spec.getValue() + "|");
                 }
-
                 ressultarray.add(stringBuilder.toString());
                 ressultarray.add(inputString + "->" + intString);
             }/**/
@@ -159,8 +119,10 @@ public class parsedString {
         intString = inputString;
         for (int sim = 0; sim < simbols.size(); sim++) {
             intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValue().toString().charAt(0));
-        }
+
+        }/**/
         sliceIntString(intString);
+        /**/
         //todo попробовать склеивать по точке заменять символы и розделять на числа
     }
 
@@ -210,22 +172,16 @@ public class parsedString {
                 }
             }
         } else {
-            if (actionsType == mathOper.PLUS) {
-                for (Double number : numberstmp)
-                    if (!number.equals(numberstmp.get(0)))
-                        ret += number;
-            } else if (actionsType == mathOper.MINUS) {
-                for (Double number : numberstmp)
-                    if (!number.equals(numberstmp.get(0)))
-                        ret -= number;
-            } else if (actionsType == mathOper.MULTIPLY) {
-                for (Double number : numberstmp)
-                    if (!number.equals(numberstmp.get(0)))
-                        ret *= number;
-            } else if (actionsType == mathOper.DIVIDE) {
-                for (Double number : numberstmp)
-                    if (!number.equals(numberstmp.get(0)))
-                        ret /= number;
+            for (int poz = 1; poz < numberstmp.size(); poz++) {
+                if (actionsType == mathOper.PLUS) {
+                    ret += numberstmp.get(poz);
+                } else if (actionsType == mathOper.MINUS) {
+                    ret -= numberstmp.get(poz);
+                } else if (actionsType == mathOper.MULTIPLY) {
+                    ret *= numberstmp.get(poz);
+                } else if (actionsType == mathOper.DIVIDE) {
+                    ret /= numberstmp.get(poz);
+                }
             }
         }
         return ret;
@@ -239,10 +195,8 @@ public class parsedString {
      */
     private void sliceIntString(String string) {
         numbers.clear();
-        //lastNumbers.clear();
         for (String one : string.split("[^0-9a-zA-Zа-яА-Я]+")) {
             numbers.add(Double.parseDouble(one));
-            //lastNumbers.add(Integer.parseInt(one.substring(one.length() - 1)));
         }
         intResult = numbers.get(numbers.size() - 1);
         numbers.remove(numbers.size() - 1);
@@ -255,7 +209,7 @@ public class parsedString {
      */
     public parsedString(String string, Type type, boolean all) {
         this.allAnswers = all;
-        //string=string.replace(" ","");
+        string=string.replace(" ","");
         string = string.toLowerCase();
         this.inputString = string;
         this.type = type;

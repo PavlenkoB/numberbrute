@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.*;
+import ua.ho.godex.Spec;
 import ua.ho.godex.parsedString;
 import ua.ho.godex.parsedString.*;
 
@@ -74,8 +75,9 @@ public class numberbrute extends Activity {
         @Override
         protected Void doInBackground(Void... voids) {
             res = new parsedString(vuraz, parsedString.Type.CHAR, allResTmp);
+            res.mathResultstr();
 
-            full = ((Number) Math.pow(10, res.simbols.size())).intValue();
+            /*full = ((Number) Math.pow(10, res.simbols.size())).intValue();
             while (res.simbols.get(res.simbols.size() - 1).getValue() < 10) {
                 res.progress++;
                 if (res.ressultarray.size() != 0 && !res.allAnswers) {
@@ -106,8 +108,8 @@ public class numberbrute extends Activity {
 
                     res.ressultarray.add(stringBuilder.toString());
                     res.ressultarray.add(res.inputString + "->" + res.intString);
-                }/**/
-            }
+                }
+            }/**/
             return null;
         }
 
@@ -119,7 +121,7 @@ public class numberbrute extends Activity {
             for (Spec spec : specs)
                 stringBuilder.append(spec.getValue());
             progressText.setText(stringBuilder.toString());*/
-            progressBar.setProgress((int) (res.progress/full*100));
+            //progressBar.setProgress((int) (res.progress/full*100));
 
         }
 
