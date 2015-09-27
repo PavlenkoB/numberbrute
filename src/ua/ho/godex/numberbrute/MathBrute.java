@@ -1,12 +1,11 @@
-package ua.ho.godex;
+package ua.ho.godex.numberbrute;
 
 import java.util.ArrayList;
 
 /**
  * Created by tf101 on 05.10.14.
  */
-public class parsedString {
-
+public class MathBrute {
     public ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
     public ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
     public ArrayList<Character> actions = new ArrayList<>();       // array of do
@@ -14,38 +13,72 @@ public class parsedString {
     public Double intResult;//result string
     public ArrayList<Integer> lastNumbers = new ArrayList<>();// last number of numeric
     public String intString;// result string after replace
-
-    public boolean allAnswers = true;
-
-    public Double progress = new Double(0);
-
-    public ArrayList<String> ressultarray = new ArrayList<>();
-    public String strResult = new String();
+    public boolean allAnswers = false;
+    public Double progress = (double) 0;
+    public ArrayList<String> ressultArray = new ArrayList<>();
     public String inputString;
-
     public Integer iteration = 0;
-
     public Type type;
     public mathOper actionsType = mathOper.MIXED;
-
     public boolean debug = false;
     public boolean debugMath = false;
 
-    public static enum Type {CHAR, NUMBER}
+    boolean filterLastNumber = false;// фильтр по последним цыфрам
+    boolean sameOperations = false; //если все действия одинаковые
 
-    /**
-     * 0=mixed
-     * 1=+
-     * 2=-
-     * 3=*
-     * 4=/
-     */
-    public static enum mathOper {
-        MIXED, PLUS, MINUS, MULTIPLY, DIVIDE
+    public MathBrute() {
     }
 
+    /**
+     * @param string input string
+     * @param type   type fo string 'NUMBER' ot 'CHAR'
+     * @param all    display all(true) results or only first(false)
+     */
+    public MathBrute(String string, Type type, boolean all) {
+        this.allAnswers = all;
+        string = string.replace(" ", "");
+        string = string.toLowerCase();
+        this.inputString = string;
+        this.type = type;
+        if (type == Type.NUMBER) {
+            sliceIntString(string);
+        }
+        if (type == Type.CHAR) {
+            for (String one : string.split("[^0-9a-zA-Zа-яА-Я]+")) {
+                numbersStr.add(one);
+            }
+            for (String one : string.toString().split("[0-9a-zA-Zа-яА-Я]+")) {
+                if (one.length() > 0)
+                    actions.add(one.charAt(0));
+            }
+            actionsType = getactionType();
 
-    public parsedString() {
+            //sobraty simvolu
+            ArrayList<Character> allchar = new ArrayList<>();       // array of do
+            for (String numeric : numbersStr) { //for every numeric
+                for (Character character : numeric.toCharArray()) {//for every character
+                    if (!allchar.contains(character)) {
+                        allchar.add(character);
+                        if (character.equals(numeric.charAt(0)))
+                            simbols.add(new Spec(character, 1, true));// if char firs in numeric
+                        else
+                            simbols.add(new Spec(character, 0, false));// if char not firs in numeric
+
+                    } else {
+                        if (allchar.contains(character) && character.equals(numeric.charAt(0))) {
+                            for (Spec spec : simbols) {
+                                if (spec.getCharacter() == character) {
+                                    spec.setValue(1);
+                                    spec.setNotZero(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //delete result from numbers
+            numbersStr.remove(numbersStr.size() - 1);
+        }
     }
 
     public void charinc(Integer index) {
@@ -69,7 +102,7 @@ public class parsedString {
         Double full = Math.pow(10, simbols.size());
         while (simbols.get(simbols.size() - 1).getValue() < 10) {
             progress++;
-            if (ressultarray.size() != 0 && !allAnswers) {
+            if (ressultArray.size() != 0 && !allAnswers) {
                 break;
             }
 
@@ -89,27 +122,32 @@ public class parsedString {
             if (colision)
                 continue;
             copyStrToInt();
-/*
-            if (lastNumbers.size() == 3) {
+            //todo а фильтр то не готов
+            if (filterLastNumber && actionsType != mathOper.MIXED) {
                 if (actionsType == mathOper.PLUS) {
-                    if ((lastNumbers.get(0) + lastNumbers.get(1)) % 10 != lastNumbers.get(2))
+                    int sum = 0;
+                    //todo вынисти счетчик сколько цыфр в другое место
+                    int numbers = lastNumbers.size();
+                    for (int count = 0; count < numbers - 1; count++)
+                        sum += lastNumbers.get(count);
+                    if (sum % 10 != lastNumbers.get(numbers-1))
                         continue;
                 } else if (actionsType == mathOper.MULTIPLY) {
                     if ((lastNumbers.get(0) * lastNumbers.get(1)) % 10 != lastNumbers.get(2))
                         continue;
                 }
-            }*/
+            }
             //iteration++;
             if (this.mathResult().equals(intResult)) {
                 stringBuilder = new StringBuilder();
                 for (Spec spec : simbols) {
                     stringBuilder.append(spec.getCharacter() + ":" + spec.getValue() + "|");
                 }
-                ressultarray.add(stringBuilder.toString());
-                ressultarray.add(inputString + "->" + intString);
+                ressultArray.add(stringBuilder.toString());
+                ressultArray.add(inputString + "->" + intString);
             }/**/
         }
-        //ressultarray.add("iteration=" + iteration);
+        //ressultArray.add("iteration=" + iteration);
     }
 
     /**
@@ -118,8 +156,7 @@ public class parsedString {
     public void copyStrToInt() {//copy array of char numbers to integer with replace
         intString = inputString;
         for (int sim = 0; sim < simbols.size(); sim++) {
-            intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValue().toString().charAt(0));
-
+            intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValChar());
         }/**/
         sliceIntString(intString);
         /**/
@@ -202,59 +239,6 @@ public class parsedString {
         numbers.remove(numbers.size() - 1);
     }
 
-    /**
-     * @param string input string
-     * @param type   type fo string 'NUMBER' ot 'CHAR'
-     * @param all    display all(true) results or only first(false)
-     */
-    public parsedString(String string, Type type, boolean all) {
-        this.allAnswers = all;
-        string=string.replace(" ","");
-        string = string.toLowerCase();
-        this.inputString = string;
-        this.type = type;
-        if (type == Type.NUMBER) {
-            sliceIntString(string);
-        }
-        if (type == Type.CHAR) {
-            for (String one : string.split("[^0-9a-zA-Zа-яА-Я]+")) {
-                numbersStr.add(one);
-            }
-            for (String one : string.toString().split("[0-9a-zA-Zа-яА-Я]+")) {
-                if (one.length() > 0)
-                    actions.add(one.charAt(0));
-            }
-            actionsType = getactionType();
-
-            //sobraty simvolu
-            ArrayList<Character> allchar = new ArrayList<>();       // array of do
-            for (String numeric : numbersStr) { //for every numeric
-                for (Character character : numeric.toCharArray()) {//for every character
-                    if (!allchar.contains(character)) {
-                        allchar.add(character);
-                        if (character.equals(numeric.charAt(0)))
-                            simbols.add(new Spec(character, 1, true));// if char firs in numeric
-                        else
-                            simbols.add(new Spec(character, 0, false));// if char not firs in numeric
-
-                    } else {
-                        if (allchar.contains(character) && character.equals(numeric.charAt(0))) {
-                            for (Spec spec : simbols) {
-                                if (spec.getCharacter().equals(character)) {
-                                    spec.setValue(1);
-                                    spec.setNotZero(true);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            //delete result from numbers
-            numbersStr.remove(numbersStr.size() - 1);
-        }
-    }
-
     private mathOper getactionType() {
 
         Character firstAction = actions.get(0);
@@ -274,5 +258,18 @@ public class parsedString {
             return mathOper.DIVIDE;
         }
         return mathOper.MIXED;
+    }
+
+    public static enum Type {CHAR, NUMBER}
+
+    /**
+     * 0=mixed
+     * 1=+
+     * 2=-
+     * 3=*
+     * 4=/
+     */
+    public static enum mathOper {
+        MIXED, PLUS, MINUS, MULTIPLY, DIVIDE
     }
 }

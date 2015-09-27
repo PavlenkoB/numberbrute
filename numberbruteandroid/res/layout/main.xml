@@ -28,7 +28,7 @@
             android:inputType="text"
             android:ems="10"
             android:text="@string/standart"
-            android:id="@+id/inputtext" android:layout_gravity="center_horizontal"/>
+            android:id="@+id/inputText" android:layout_gravity="center_horizontal"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -6,18 +6,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.*;
-import ua.ho.godex.Spec;
-import ua.ho.godex.parsedString;
-import ua.ho.godex.parsedString.*;
-
-import java.util.ArrayList;
+import ua.ho.godex.numberbrute.MathBrute;
 
 public class numberbrute extends Activity {
     /**
      * Called when the activity is first created.
      */
     EditText console;
-    EditText inputtext;
+    EditText inputText;
     TextView progressText;
     ProgressBar progressBar;
     CheckBox allRes;
@@ -33,9 +29,10 @@ public class numberbrute extends Activity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressText = (TextView) findViewById(R.id.progressText);
         console = (EditText) findViewById(R.id.console);
-        inputtext = (EditText) findViewById(R.id.inputtext);
+        inputText = (EditText) findViewById(R.id.inputText);
         allRes = (CheckBox) findViewById(R.id.allRes);
         run=(Button) findViewById(R.id.run);
+        inputText.setText("книга+книга+книга=наука");
     }
 
     public void brute(View view) {
@@ -45,17 +42,14 @@ public class numberbrute extends Activity {
 
     private Runnable calculate = new Runnable() {
         public void run() {
-
             System.out.println("\nInput vuraz a+b=c");
-
-
         }
     };
 
     class calculate extends AsyncTask<Void, Object,Void> {
         long timer;
         StringBuilder stringBuilder = new StringBuilder();
-        parsedString res;
+        MathBrute res;
         String vuraz;
         boolean allResTmp;
         Integer full;
@@ -65,7 +59,7 @@ public class numberbrute extends Activity {
         protected void onPreExecute() {
             run.setEnabled(false);
 
-            vuraz = inputtext.getText().toString();
+            vuraz = inputText.getText().toString();
 
             timer = System.currentTimeMillis();
             allResTmp=allRes.isChecked();
@@ -74,13 +68,13 @@ public class numberbrute extends Activity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            res = new parsedString(vuraz, parsedString.Type.CHAR, allResTmp);
+            res = new MathBrute(vuraz, MathBrute.Type.CHAR, allResTmp);
             res.mathResultstr();
 
             /*full = ((Number) Math.pow(10, res.simbols.size())).intValue();
             while (res.simbols.get(res.simbols.size() - 1).getValue() < 10) {
                 res.progress++;
-                if (res.ressultarray.size() != 0 && !res.allAnswers) {
+                if (res.ressultArray.size() != 0 && !res.allAnswers) {
                     break;
                 }
                 res.charinc(0);
@@ -106,8 +100,8 @@ public class numberbrute extends Activity {
                         stringBuilder.append(spec.getCharacter()+":"+spec.getValue()+"|");
                     }
 
-                    res.ressultarray.add(stringBuilder.toString());
-                    res.ressultarray.add(res.inputString + "->" + res.intString);
+                    res.ressultArray.add(stringBuilder.toString());
+                    res.ressultArray.add(res.inputString + "->" + res.intString);
                 }
             }/**/
             return null;
@@ -129,10 +123,10 @@ public class numberbrute extends Activity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             stringBuilder=new StringBuilder();
-            for (String s : res.ressultarray) {
+            for (String s : res.ressultArray) {
                 stringBuilder.append(s + "\n");
             }
-            progressText.setText("Results="+res.ressultarray.size()/2);
+            progressText.setText("Results="+res.ressultArray.size()/2);
             console.setText(stringBuilder + "\n" + "time=" + (System.currentTimeMillis() - timer));/**/
             run.setEnabled(true);
         }

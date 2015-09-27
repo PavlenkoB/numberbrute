@@ -1,11 +1,12 @@
 package ua.ho.godex;
 
+import ua.ho.godex.numberbrute.MathBrute;
+
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-
         Scanner console=new Scanner(System.in);
         Integer var=0;
         while(true) {
@@ -16,13 +17,12 @@ public class Main {
 
            console.nextLine();
             if (var == -1) {//hidden don't work
-                    console.reset();
                     System.out.println("Input vuraz (something like this '2+4+6+7')");
                     //String vuraz=   "2+3*2";     //console.nextLine();
                     String vuraz = console.nextLine();
                     if (vuraz.equals("e"))
                         break;
-                    parsedString res = new parsedString(vuraz, parsedString.Type.NUMBER,true);
+                    MathBrute res = new MathBrute(vuraz, MathBrute.Type.NUMBER,true);
 
                     System.out.println("math:" + vuraz + "=" + res.mathResult());
 
@@ -34,7 +34,7 @@ public class Main {
                 String vuraz = "гол*гол=футбол";
                 //vuraz=console.nextLine();
                 long timer=System.currentTimeMillis();
-                parsedString res = new parsedString(vuraz, parsedString.Type.CHAR,true);
+                MathBrute res = new MathBrute(vuraz, MathBrute.Type.CHAR,true);
                 res.mathResultstr();
                 System.out.println("time="+(System.currentTimeMillis()-timer));
             }

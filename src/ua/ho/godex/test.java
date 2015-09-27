@@ -1,5 +1,7 @@
 package ua.ho.godex;
 
+import ua.ho.godex.numberbrute.MathBrute;
+
 /**
  * Created by
  * User: godex_000
@@ -8,12 +10,11 @@ package ua.ho.godex;
  */
 public class test {
     public static void main(String[] args) {
-
-        parsedString res = new parsedString("ВЕТКА+ВЕТКА=ДЕРЕВО", parsedString.Type.CHAR,false);
+        MathBrute res = new MathBrute("ВЕТКА+ВЕТКА=ДЕРЕВО", MathBrute.Type.CHAR,false);
         long timer=System.currentTimeMillis();
         res.mathResultstr();
         System.out.println("time="+(System.currentTimeMillis()-timer));
-        for (String string:res.ressultarray){
+        for (String string:res.ressultArray){
             System.out.println(string);
         }
     }
