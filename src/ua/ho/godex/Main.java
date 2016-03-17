@@ -35,7 +35,7 @@ public class Main {
                 //vuraz=console.nextLine();
                 long timer=System.currentTimeMillis();
                 MathBrute res = new MathBrute(vuraz, MathBrute.Type.CHAR,true);
-                res.mathResultstr();
+                res.mathResultStr();
                 System.out.println("time="+(System.currentTimeMillis()-timer));
             }
             if (var == 0) {

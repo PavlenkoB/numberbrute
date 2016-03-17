@@ -69,7 +69,7 @@ public class numberbrute extends Activity {
         @Override
         protected Void doInBackground(Void... voids) {
             res = new MathBrute(vuraz, MathBrute.Type.CHAR, allResTmp);
-            res.mathResultstr();
+            res.mathResultStr();
 
             /*full = ((Number) Math.pow(10, res.simbols.size())).intValue();
             while (res.simbols.get(res.simbols.size() - 1).getValue() < 10) {
@@ -77,7 +77,7 @@ public class numberbrute extends Activity {
                 if (res.ressultArray.size() != 0 && !res.allAnswers) {
                     break;
                 }
-                res.charinc(0);
+                res.charInc(0);
                 publishProgress(res.simbols,full,res.progress);
                 boolean colision = false;
                 for (Spec spec : res.simbols) {

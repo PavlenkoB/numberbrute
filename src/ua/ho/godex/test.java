@@ -12,7 +12,7 @@ public class test {
     public static void main(String[] args) {
         MathBrute res = new MathBrute("ВЕТКА+ВЕТКА=ДЕРЕВО", MathBrute.Type.CHAR,false);
         long timer=System.currentTimeMillis();
-        res.mathResultstr();
+        res.mathResultStr();
         System.out.println("time="+(System.currentTimeMillis()-timer));
         for (String string:res.ressultArray){
             System.out.println(string);

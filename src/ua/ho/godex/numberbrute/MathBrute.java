@@ -26,9 +26,6 @@ public class MathBrute {
     boolean filterLastNumber = false;// фильтр по последним цыфрам
     boolean sameOperations = false; //если все действия одинаковые
 
-    public MathBrute() {
-    }
-
     /**
      * @param string input string
      * @param type   type fo string 'NUMBER' ot 'CHAR'
@@ -69,7 +66,6 @@ public class MathBrute {
                             for (Spec spec : simbols) {
                                 if (spec.getCharacter() == character) {
                                     spec.setValue(1);
-                                    spec.setNotZero(true);
                                 }
                             }
                         }
@@ -81,14 +77,14 @@ public class MathBrute {
         }
     }
 
-    public void charinc(Integer index) {
+    public void charInc(Integer index) {
         simbols.get(index).setValue(simbols.get(index).getValue() + 1);
         if (simbols.get(index).getValue() > 9 && (index < simbols.size() - 1)) {
             if (simbols.get(index).isNotZero())
                 simbols.get(index).setValue(1);
             else
                 simbols.get(index).setValue(0);
-            charinc(index + 1);
+            charInc(index + 1);
         }
 
     }
@@ -97,17 +93,24 @@ public class MathBrute {
         return (num == 0) ? 1 : num * fact(num - 1);
     }
 
-    public void mathResultstr() {
+    public void reset() {
+        for (Spec simbol : this.simbols) {
+            simbol.setValue(0);
+        }
+        this.ressultArray.clear();
+    }
+
+    public void mathResultStr() {
         StringBuilder stringBuilder;
-        Double full = Math.pow(10, simbols.size());
+//        Double full = Math.pow(10, simbols.size());
+        boolean colision;
         while (simbols.get(simbols.size() - 1).getValue() < 10) {
-            progress++;
+//            progress++;
             if (ressultArray.size() != 0 && !allAnswers) {
                 break;
             }
-
-            charinc(0);
-            boolean colision = false;
+            charInc(0);
+            colision = false;
             for (Spec spec : simbols) {
                 for (Spec spec1 : simbols) {
                     if (spec1.getValue() == spec.getValue() && spec1.getCharacter() != spec.getCharacter()) {
@@ -130,7 +133,7 @@ public class MathBrute {
                     int numbers = lastNumbers.size();
                     for (int count = 0; count < numbers - 1; count++)
                         sum += lastNumbers.get(count);
-                    if (sum % 10 != lastNumbers.get(numbers-1))
+                    if (sum % 10 != lastNumbers.get(numbers - 1))
                         continue;
                 } else if (actionsType == mathOper.MULTIPLY) {
                     if ((lastNumbers.get(0) * lastNumbers.get(1)) % 10 != lastNumbers.get(2))
@@ -145,9 +148,9 @@ public class MathBrute {
                 }
                 ressultArray.add(stringBuilder.toString());
                 ressultArray.add(inputString + "->" + intString);
-            }/**/
+            }
         }
-        //ressultArray.add("iteration=" + iteration);
+        ressultArray.add("iteration=" + iteration);
     }
 
     /**
