@@ -3,54 +3,69 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:weightSum="1" android:clickable="false">
+              android:weightSum="1"
+              android:clickable="false">
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/version"
-            android:id="@+id/textView" android:layout_gravity="center_horizontal"/>
+            android:id="@+id/version"
+            android:layout_gravity="center_horizontal"/>
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/options"
-            android:id="@+id/options" android:layout_gravity="center_horizontal"/>
+            android:id="@+id/options"
+            android:layout_gravity="center_horizontal"/>
+
     <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="All"
             android:checked="false"
             android:id="@+id/allRes"/>
+
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
             android:ems="10"
             android:text="@string/standart"
-            android:id="@+id/inputText" android:layout_gravity="center_horizontal"/>
+            android:id="@+id/inputText"
+            android:layout_gravity="center_horizontal"/>
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Run"
+            android:text="@string/btnRun"
             android:onClick="brute"
-            android:id="@+id/run" android:layout_gravity="center_horizontal"
+            android:id="@+id/run"
+            android:layout_gravity="center_horizontal"
             />
+
     <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar" android:layout_gravity="center_horizontal"/>
+            android:id="@+id/progressBar"
+            android:layout_gravity="center_horizontal"/>
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
-            android:id="@+id/progressText" android:layout_gravity="center_horizontal"/>
+            android:id="@+id/progressText"
+            android:layout_gravity="center_horizontal"/>
+
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/console"
-            android:layout_gravity="center_horizontal" android:editable="false"/>
+            android:layout_gravity="center_horizontal"
+            android:editable="false"/>
 </LinearLayout>
 

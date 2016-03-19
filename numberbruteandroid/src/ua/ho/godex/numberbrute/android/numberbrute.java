@@ -1,12 +1,21 @@
 package ua.ho.godex.numberbrute.android;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.View;
 import android.widget.*;
-import ua.ho.godex.numberbrute.MathBrute;
+import ua.ho.godex.mblogic.classes.MathBrute;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class numberbrute extends Activity {
     /**
@@ -18,9 +27,18 @@ public class numberbrute extends Activity {
     ProgressBar progressBar;
     CheckBox allRes;
     Button run;
+    TextView optionsTV;
+    TextView version;
+
+    MathBrute res;
+    boolean allResTmp;
 
     private Handler mHandler = new Handler();
-
+    private Runnable calculate = new Runnable() {
+        public void run() {
+            System.out.println("\nInput vuraz a+b=c");
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +49,12 @@ public class numberbrute extends Activity {
         console = (EditText) findViewById(R.id.console);
         inputText = (EditText) findViewById(R.id.inputText);
         allRes = (CheckBox) findViewById(R.id.allRes);
-        run=(Button) findViewById(R.id.run);
+        run = (Button) findViewById(R.id.run);
+        optionsTV = (TextView) findViewById(R.id.options);
+        String tmpString="last="+MathBrute.filterLastNumber+"|sameOperations="+MathBrute.sameOperations;
+        optionsTV.setText(tmpString);
         inputText.setText("книга+книга+книга=наука");
+
     }
 
     public void brute(View view) {
@@ -40,30 +62,54 @@ public class numberbrute extends Activity {
         calc.execute();
     }
 
-    private Runnable calculate = new Runnable() {
-        public void run() {
-            System.out.println("\nInput vuraz a+b=c");
-        }
-    };
+    public void Update(String apkurl){
+        try {
+            URL url = new URL(apkurl);
+            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+            c.setRequestMethod("GET");
+            c.setDoOutput(true);
+            c.connect();
 
-    class calculate extends AsyncTask<Void, Object,Void> {
+            String PATH = Environment.getExternalStorageDirectory() + "/download/";
+            File file = new File(PATH);
+            file.mkdirs();
+            File outputFile = new File(file, "app.apk");
+            FileOutputStream fos = new FileOutputStream(outputFile);
+
+            InputStream is = c.getInputStream();
+
+            byte[] buffer = new byte[1024];
+            int len1 = 0;
+            while ((len1 = is.read(buffer)) != -1) {
+                fos.write(buffer, 0, len1);
+            }
+            fos.close();
+            is.close();//till here, it works fine - .apk is download to my sdcard in download file
+
+            Intent promptInstall = new Intent(Intent.ACTION_VIEW)
+                    .setData(Uri.parse(PATH+"app.apk"))
+                    .setType("application/android.com.app");
+            startActivity(promptInstall);//installation is not working
+
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Update error!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    class calculate extends AsyncTask<Void, Object, Void> {
         long timer;
         StringBuilder stringBuilder = new StringBuilder();
-        MathBrute res;
+
         String vuraz;
-        boolean allResTmp;
         Integer full;
 
 
         @Override
         protected void onPreExecute() {
             run.setEnabled(false);
-
             vuraz = inputText.getText().toString();
-
             timer = System.currentTimeMillis();
-            allResTmp=allRes.isChecked();
-
+            allResTmp = allRes.isChecked();
         }
 
         @Override
@@ -122,11 +168,11 @@ public class numberbrute extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            stringBuilder=new StringBuilder();
+            stringBuilder = new StringBuilder();
             for (String s : res.ressultArray) {
                 stringBuilder.append(s + "\n");
             }
-            progressText.setText("Results="+res.ressultArray.size()/2);
+            progressText.setText("Results=" + res.ressultArray.size() / 2);
             console.setText(stringBuilder + "\n" + "time=" + (System.currentTimeMillis() - timer));/**/
             run.setEnabled(true);
         }

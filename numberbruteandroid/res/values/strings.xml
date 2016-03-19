@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Number Brute</string>
-    <string name="options">last- colision+ mathOper+ iteration-</string>
+    <string name="app_name">Crypt Brute</string>
     <string name="standart">ВЕТКА+ВЕТКА=ДЕРЕВО</string>
-    <string name="version">V 1.21</string>
+    <string name="version">1.22</string>
+    <string name="btnRun">Run</string>
 </resources>
