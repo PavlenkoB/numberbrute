@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="standart">ВЕТКА+ВЕТКА=ДЕРЕВО</string>
+    <string name="btnRun">Подобрать</string>
+</resources>

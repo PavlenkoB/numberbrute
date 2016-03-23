@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Crypt Brute</string>
-    <string name="standart">ВЕТКА+ВЕТКА=ДЕРЕВО</string>
-    <string name="version">1.22</string>
+    <string name="app_name" translatable="false">Crypt Brute</string>
+    <string name="version" translatable="false">1.32</string>
     <string name="btnRun">Run</string>
+    <string name="standart">a+fat=ass</string>
 </resources>
