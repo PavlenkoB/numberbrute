@@ -15,7 +15,7 @@ public class MathBruteTest {
     public void testMathResultstr() throws Exception {
         long timer;
         long sum = 0;
-        LinkedList<MathBrute> mathBruteList = new LinkedList<>();
+        LinkedList<MathBrute> mathBruteList = new LinkedList<MathBrute>();
         int testInerator = 1;
         mathBruteList.add(new MathBrute("A+FAT=ASS", MathBrute.Type.CHAR, false));
         mathBruteList.add(new MathBrute("AB+BC+CA=ABC", MathBrute.Type.CHAR, false));
