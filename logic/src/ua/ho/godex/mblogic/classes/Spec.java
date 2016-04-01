@@ -1,11 +1,7 @@
 package ua.ho.godex.mblogic.classes;
 
-import java.util.Arrays;
-import java.util.List;
-
-
 public class Spec {
-    static List<Character> charArray = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+    private static final char[] charArray = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     private char character;// cher
     private int value;// integer value
     private boolean cantBeZero = false;//не может быть 0
@@ -46,6 +42,6 @@ public class Spec {
     }
 
     public char getValChar() {
-        return charArray.get(value);
+        return charArray[value];
     }
 }
