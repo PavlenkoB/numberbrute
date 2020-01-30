@@ -27,5 +27,11 @@
             <!-- эта библиотека используется только для запуска и компилирования тестов -->
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>ua.ho.godex</groupId>
+            <artifactId>logic</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -1,4 +1,4 @@
-package ua.ho.godex.numberbrute;
+package test.ua.ho.godex.numberbrute;
 
 import org.junit.Test;
 import ua.ho.godex.mblogic.classes.MathBrute;
