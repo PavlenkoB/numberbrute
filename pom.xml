@@ -7,7 +7,7 @@
 
     <groupId>ua.ho.godex</groupId>
     <artifactId>numberbrute</artifactId>
-    <version>RELEASE</version>
+    <version>1.0</version>
     <name>Number rebus brute</name>
     <packaging>pom</packaging>
     <description>Подборщик для "Криптарифмы"
@@ -23,8 +23,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.8</jdk.version>
-
     </properties>
+
     <build>
         <plugins>
             <plugin>

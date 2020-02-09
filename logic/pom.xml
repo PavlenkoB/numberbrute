@@ -9,7 +9,10 @@
         <groupId>ua.ho.godex</groupId>
         <version>RELEASE</version>
     </parent>
+    <packaging>pom</packaging>
+
 
     <artifactId>logic</artifactId>
+    <version>1.0</version>
 
 </project>
