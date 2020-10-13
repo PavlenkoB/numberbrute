@@ -25,7 +25,7 @@
             <!-- координаты необходимой библиотеки -->
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <!-- эта библиотека используется только для запуска и компилирования тестов -->
             <scope>test</scope>
         </dependency>
