@@ -22,7 +22,7 @@ public class MathBrute {
     private String inputString;
     private Integer iterationCounter = 0;
     private Type typeOfTask;
-    private mathOper actionsType = mathOper.MIXED;
+    private mathOperation actionsType = mathOperation.MIXED;
 
     public MathBrute(String string) {
         this.inputString = string;
@@ -134,11 +134,11 @@ public class MathBrute {
                 continue;
             copyStrToInt();
             //todo а фильтр то не готов
-            if (filterLastNumber && actionsType != mathOper.MIXED) {
+            if (filterLastNumber && actionsType != mathOperation.MIXED) {
                 for (Double last : this.numbers) {
                     lastNumbers.add(last.intValue() % 10);
                 }
-                if (actionsType == mathOper.PLUS) {
+                if (actionsType == mathOperation.PLUS) {
                     int sum = 0;
                     //todo вынисти счетчик сколько цыфр в другое место
                     int numbers = lastNumbers.size();
@@ -148,7 +148,7 @@ public class MathBrute {
                     if (sum % 10 != lastNumbers.get(numbers - 1)) {
                         continue;
                     }
-                } else if (actionsType == mathOper.MULTIPLY) {
+                } else if (actionsType == mathOperation.MULTIPLY) {
                     if ((lastNumbers.get(0) * lastNumbers.get(1)) % 10 != lastNumbers.get(2))
                         continue;
                 }
@@ -198,7 +198,7 @@ public class MathBrute {
         boolean spec = false;
         Double tmpdouble = null;
         Double ret = numberstmp.get(0);
-        if (actionsType == mathOper.MIXED) {
+        if (actionsType == mathOperation.MIXED) {
             for (int diya = 0; diya < actions.size(); diya++) {
                 if (actions.get(diya) == '*') {
                     if (spec == false) {
@@ -236,13 +236,13 @@ public class MathBrute {
             }
         } else {
             for (int poz = 1; poz < numberstmp.size(); poz++) {
-                if (actionsType == mathOper.PLUS) {
+                if (actionsType == mathOperation.PLUS) {
                     ret += numberstmp.get(poz);
-                } else if (actionsType == mathOper.MINUS) {
+                } else if (actionsType == mathOperation.MINUS) {
                     ret -= numberstmp.get(poz);
-                } else if (actionsType == mathOper.MULTIPLY) {
+                } else if (actionsType == mathOperation.MULTIPLY) {
                     ret *= numberstmp.get(poz);
-                } else if (actionsType == mathOper.DIVIDE) {
+                } else if (actionsType == mathOperation.DIVIDE) {
                     ret /= numberstmp.get(poz);
                 }
             }
@@ -265,24 +265,24 @@ public class MathBrute {
         numbers.remove(numbers.size() - 1);
     }
 
-    private mathOper getActionType() {
+    private mathOperation getActionType() {
         Character firstAction = actions.get(0);
         for (Character character : actions) {
             if (firstAction.equals(character) || character.equals('='))
                 continue;
             else
-                return mathOper.MIXED;
+                return mathOperation.MIXED;
         }
         if (firstAction.equals('+')) {
-            return mathOper.PLUS;
+            return mathOperation.PLUS;
         } else if (firstAction.equals('-')) {
-            return mathOper.MINUS;
+            return mathOperation.MINUS;
         } else if (firstAction.equals('*')) {
-            return mathOper.MULTIPLY;
+            return mathOperation.MULTIPLY;
         } else if (firstAction.equals('/')) {
-            return mathOper.DIVIDE;
+            return mathOperation.DIVIDE;
         }
-        return mathOper.MIXED;
+        return mathOperation.MIXED;
     }
 
     public enum Type {CHAR, NUMBER}
@@ -294,7 +294,7 @@ public class MathBrute {
      * 3=*
      * 4=/
      */
-    public enum mathOper {
+    public enum mathOperation {
         MIXED, PLUS, MINUS, MULTIPLY, DIVIDE
     }
 }
