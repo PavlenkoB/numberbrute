@@ -37,7 +37,7 @@ public class MathBruteTest {
                 sum += timer;
                 //System.out.println(timer);
             }
-            if(mathBrute.ressultArray.size()>0) {
+            if (mathBrute.ressultArray.size() > 0) {
                 for (String string : mathBrute.ressultArray) {
                     System.out.println(string);
                 }

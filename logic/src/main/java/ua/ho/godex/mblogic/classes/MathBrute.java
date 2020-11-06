@@ -20,26 +20,29 @@ public class MathBrute {
     public String intString;// result string after replace
     public boolean allAnswers = false;
     public Double progress = (double) 0;
-    public ArrayList<String> ressultArray = new ArrayList<>();
+    public ArrayList<MathBruteResult> ressultArray = new ArrayList<>();
     public String inputString;
     public Integer iteration = 0;
     public Type type;
     public mathOper actionsType = mathOper.MIXED;
 
-    /**
-     * @param string input string
-     * @param type   type fo string 'NUMBER' ot 'CHAR'
-     * @param all    display all(true) results or only first(false)
-     */
-    public MathBrute(String string, Type type, boolean all) {
+    public MathBrute(String string, boolean all) {
         this.allAnswers = all;
         this.inputString = string;
-        this.type = type;
+        this.type = Type.CHAR;
     }
 
     public MathBrute(Type aChar, boolean all) {
         this.allAnswers = all;
         this.type = aChar;
+    }
+
+    public String getResultOfCalculation() {
+        this.mathResultStr();
+        if (ressultArray.isEmpty()) {
+            throw new ArrayIndexOutOfBoundsException("Result array is empty");
+        }
+        return ressultArray.get(0).getResult();
     }
 
     public void setInputString(String inputString) {
@@ -65,7 +68,7 @@ public class MathBrute {
     /**
      * Сброс расчетов
      */
-    public void reset() {
+    private void reset() {
         for (Spec simbol : this.simbols) {
             simbol.setValue(0);
         }
@@ -117,7 +120,7 @@ public class MathBrute {
         }
     }
 
-    public void mathResultStr() {
+    private void mathResultStr() {
         this.prepare();
         boolean colision;
         while (simbols.get(simbols.size() - 1).getValue() < 10) {
@@ -125,8 +128,8 @@ public class MathBrute {
                 break;
             }
             this.iteration++;
-            if(this.iteration>countlimit){
-                System.out.println("!!!!!!!!!this.iteration>"+countlimit);
+            if (this.iteration > countlimit) {
+                System.out.println("!!!!!!!!!this.iteration>" + countlimit);
                 break;
             }
             charInc(0);
@@ -173,12 +176,8 @@ public class MathBrute {
                     stringBuilder.append(spec.getCharacter() + ":" + spec.getValue() + "|");
                 }
                 ressultArray.add(stringBuilder.toString());*/
-                ressultArray.add(inputString + "->" + intString);
+                ressultArray.add(new MathBruteResult(inputString, intString));
             }
-        }
-        if (debug) {
-            ressultArray.add("this.iteration=" + this.iteration);
-            ressultArray.add(showValues());
         }
     }
 
@@ -193,7 +192,7 @@ public class MathBrute {
     /**
      * convert string with characters to string with numbers and slice ut
      */
-    public void copyStrToInt() {//copy array of char numbers to integer with replace
+    private void copyStrToInt() {//copy array of char numbers to integer with replace
         intString = inputString;
         for (int sim = 0; sim < simbols.size(); sim++) {
             intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValChar());
