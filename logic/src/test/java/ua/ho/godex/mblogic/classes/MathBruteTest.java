@@ -17,10 +17,9 @@ class MathBruteTest {
             "книга+книга+книга=наука:28375+28375+28375=85125",
             "ВАГОН+ВАГОН=СОСТАВ:85679+85679=171358",
             "НИТКА+НИТКА=ТКАНЬ:15306+15306=30612",
-    },
-            delimiter = ':')
+    }, delimiter = ':')
     void getResultOfCalculation(String input, String expected) {
-        MathBrute mathBrute = new MathBrute(input, false);
+        MathBrute mathBrute = new MathBrute(input);
         assertEquals(expected, mathBrute.getResultOfCalculation());
     }
 }

@@ -6,47 +6,37 @@ import java.util.ArrayList;
  * Created by tf101 on 05.10.14.
  */
 public class MathBrute {
-    public static boolean debug = false;
-    private static final int countlimit=10000000;
-    public static boolean debugMath = false;
-    public static boolean filterLastNumber = false;// фильтр по последним цыфрам
-    public static boolean sameOperations = false; //если все действия одинаковые
-    public ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
-    public ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
-    public ArrayList<Character> actions = new ArrayList<>();       // array of do
-    public ArrayList<Spec> simbols = new ArrayList<>();
-    public Double intResult;//result string
-    public ArrayList<Integer> lastNumbers = new ArrayList<>();// last number of numeric
-    public String intString;// result string after replace
-    public boolean allAnswers = false;
-    public Double progress = (double) 0;
-    public ArrayList<MathBruteResult> ressultArray = new ArrayList<>();
-    public String inputString;
-    public Integer iteration = 0;
-    public Type type;
-    public mathOper actionsType = mathOper.MIXED;
+    private static final int COUNT_LIMIT = 10000000;
+    private static boolean debug = false;
+    private static boolean filterLastNumber = false;// фильтр по последним цыфрам
 
-    public MathBrute(String string, boolean all) {
-        this.allAnswers = all;
+    private ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
+    private ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
+    private ArrayList<Character> actions = new ArrayList<>();       // array of do
+    private ArrayList<Spec> simbols = new ArrayList<>();
+    private Double intResult;//result string
+    private String intString;// result string after replace
+    private ArrayList<Integer> lastNumbers = new ArrayList<>();// last number of numeric
+    private boolean findAllAnswers = false;
+    private ArrayList<MathBruteResult> resultArray = new ArrayList<>();
+    private String inputString;
+    private Integer iterationCounter = 0;
+    private Type typeOfTask;
+    private mathOper actionsType = mathOper.MIXED;
+
+    public MathBrute(String string) {
         this.inputString = string;
-        this.type = Type.CHAR;
-    }
-
-    public MathBrute(Type aChar, boolean all) {
-        this.allAnswers = all;
-        this.type = aChar;
+        this.findAllAnswers = false;
+        this.typeOfTask = Type.CHAR;
     }
 
     public String getResultOfCalculation() {
+        this.reset();
         this.mathResultStr();
-        if (ressultArray.isEmpty()) {
+        if (resultArray.isEmpty()) {
             throw new ArrayIndexOutOfBoundsException("Result array is empty");
         }
-        return ressultArray.get(0).getResult();
-    }
-
-    public void setInputString(String inputString) {
-        this.inputString = inputString;
+        return resultArray.get(0).getResult();
     }
 
     public void charInc(Integer index) {
@@ -61,10 +51,6 @@ public class MathBrute {
 
     }
 
-    public Integer fact(Integer num) {
-        return (num == 0) ? 1 : num * fact(num - 1);
-    }
-
     /**
      * Сброс расчетов
      */
@@ -72,18 +58,18 @@ public class MathBrute {
         for (Spec simbol : this.simbols) {
             simbol.setValue(0);
         }
-        this.ressultArray.clear();
+        this.resultArray.clear();
         this.numbersStr.clear();
-        this.iteration = 0;
+        this.iterationCounter = 0;
     }
 
     private void prepare() {
         inputString = inputString.replace(" ", "");
         inputString = inputString.toLowerCase();
-        if (type == Type.NUMBER) {
+        if (typeOfTask == Type.NUMBER) {
             sliceIntString(inputString);
         }
-        if (type == Type.CHAR) {
+        if (typeOfTask == Type.CHAR) {
             for (String one : inputString.split("[^0-9a-zA-Zа-яА-Я]+")) {
                 numbersStr.add(one);
             }
@@ -124,12 +110,12 @@ public class MathBrute {
         this.prepare();
         boolean colision;
         while (simbols.get(simbols.size() - 1).getValue() < 10) {
-            if (ressultArray.size() != 0 && !allAnswers) {
+            if (!resultArray.isEmpty() && !findAllAnswers) {
                 break;
             }
-            this.iteration++;
-            if (this.iteration > countlimit) {
-                System.out.println("!!!!!!!!!this.iteration>" + countlimit);
+            this.iterationCounter++;
+            if (this.iterationCounter > COUNT_LIMIT) {
+                System.out.println("!!!!!!!!!this.iteration>" + COUNT_LIMIT);
                 break;
             }
             charInc(0);
@@ -176,7 +162,7 @@ public class MathBrute {
                     stringBuilder.append(spec.getCharacter() + ":" + spec.getValue() + "|");
                 }
                 ressultArray.add(stringBuilder.toString());*/
-                ressultArray.add(new MathBruteResult(inputString, intString));
+                resultArray.add(new MathBruteResult(inputString, intString));
             }
         }
     }
@@ -299,7 +285,7 @@ public class MathBrute {
         return mathOper.MIXED;
     }
 
-    public static enum Type {CHAR, NUMBER}
+    public enum Type {CHAR, NUMBER}
 
     /**
      * 0=mixed
@@ -308,7 +294,7 @@ public class MathBrute {
      * 3=*
      * 4=/
      */
-    public static enum mathOper {
+    public enum mathOper {
         MIXED, PLUS, MINUS, MULTIPLY, DIVIDE
     }
 }
