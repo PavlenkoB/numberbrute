@@ -1,5 +1,6 @@
 package ua.ho.godex.mblogic.classes;
 
+
 import java.util.ArrayList;
 
 /**
@@ -21,13 +22,13 @@ public class MathBrute {
     private ArrayList<MathBruteResult> resultArray = new ArrayList<>();
     private String inputString;
     private Integer iterationCounter = 0;
-    private Type typeOfTask;
-    private mathOperation actionsType = mathOperation.MIXED;
+    private EnumType enumTypeOfTask;
+    private EnumMathOperation actionsType = EnumMathOperation.MIXED;
 
     public MathBrute(String string) {
         this.inputString = string;
         this.findAllAnswers = false;
-        this.typeOfTask = Type.CHAR;
+        this.enumTypeOfTask = EnumType.CHAR;
     }
 
     public String getResultOfCalculation() {
@@ -42,10 +43,10 @@ public class MathBrute {
     public void charInc(Integer index) {
         simbols.get(index).setValue(simbols.get(index).getValue() + 1);
         if (simbols.get(index).getValue() > 9 && (index < simbols.size() - 1)) {
-            if (simbols.get(index).getCantBeZero())
-                simbols.get(index).setValue(1);
-            else
+            if (simbols.get(index).isCanBeZero())
                 simbols.get(index).setValue(0);
+            else
+                simbols.get(index).setValue(1);
             charInc(index + 1);
         }
 
@@ -66,10 +67,10 @@ public class MathBrute {
     private void prepare() {
         inputString = inputString.replace(" ", "");
         inputString = inputString.toLowerCase();
-        if (typeOfTask == Type.NUMBER) {
+        if (enumTypeOfTask == EnumType.NUMBER) {
             sliceIntString(inputString);
         }
-        if (typeOfTask == Type.CHAR) {
+        if (enumTypeOfTask == EnumType.CHAR) {
             for (String one : inputString.split("[^0-9a-zA-Zа-яА-Я]+")) {
                 numbersStr.add(one);
             }
@@ -86,7 +87,7 @@ public class MathBrute {
                     if (!allchar.contains(character)) {
                         allchar.add(character);
                         if (character.equals(numeric.charAt(0)))
-                            simbols.add(new Spec(character, 1, true));// if char firs in numeric
+                            simbols.add(new Spec(character, 1, false));// if char firs in numeric
                         else
                             simbols.add(new Spec(character, 0));// if char not firs in numeric
 
@@ -134,11 +135,11 @@ public class MathBrute {
                 continue;
             copyStrToInt();
             //todo а фильтр то не готов
-            if (filterLastNumber && actionsType != mathOperation.MIXED) {
+            if (filterLastNumber && actionsType != EnumMathOperation.MIXED) {
                 for (Double last : this.numbers) {
                     lastNumbers.add(last.intValue() % 10);
                 }
-                if (actionsType == mathOperation.PLUS) {
+                if (actionsType == EnumMathOperation.PLUS) {
                     int sum = 0;
                     //todo вынисти счетчик сколько цыфр в другое место
                     int numbers = lastNumbers.size();
@@ -148,12 +149,12 @@ public class MathBrute {
                     if (sum % 10 != lastNumbers.get(numbers - 1)) {
                         continue;
                     }
-                } else if (actionsType == mathOperation.MULTIPLY) {
+                } else if (actionsType == EnumMathOperation.MULTIPLY) {
                     if ((lastNumbers.get(0) * lastNumbers.get(1)) % 10 != lastNumbers.get(2))
                         continue;
                 }
             }
-            if(debug){
+            if (debug) {
                 System.out.println(showValues());
             }
             if (this.mathResult().equals(intResult)) {
@@ -198,7 +199,7 @@ public class MathBrute {
         boolean spec = false;
         Double tmpdouble = null;
         Double ret = numberstmp.get(0);
-        if (actionsType == mathOperation.MIXED) {
+        if (actionsType == EnumMathOperation.MIXED) {
             for (int diya = 0; diya < actions.size(); diya++) {
                 if (actions.get(diya) == '*') {
                     if (spec == false) {
@@ -236,13 +237,13 @@ public class MathBrute {
             }
         } else {
             for (int poz = 1; poz < numberstmp.size(); poz++) {
-                if (actionsType == mathOperation.PLUS) {
+                if (actionsType == EnumMathOperation.PLUS) {
                     ret += numberstmp.get(poz);
-                } else if (actionsType == mathOperation.MINUS) {
+                } else if (actionsType == EnumMathOperation.MINUS) {
                     ret -= numberstmp.get(poz);
-                } else if (actionsType == mathOperation.MULTIPLY) {
+                } else if (actionsType == EnumMathOperation.MULTIPLY) {
                     ret *= numberstmp.get(poz);
-                } else if (actionsType == mathOperation.DIVIDE) {
+                } else if (actionsType == EnumMathOperation.DIVIDE) {
                     ret /= numberstmp.get(poz);
                 }
             }
@@ -265,36 +266,24 @@ public class MathBrute {
         numbers.remove(numbers.size() - 1);
     }
 
-    private mathOperation getActionType() {
+    private EnumMathOperation getActionType() {
         Character firstAction = actions.get(0);
         for (Character character : actions) {
             if (firstAction.equals(character) || character.equals('='))
                 continue;
             else
-                return mathOperation.MIXED;
+                return EnumMathOperation.MIXED;
         }
         if (firstAction.equals('+')) {
-            return mathOperation.PLUS;
+            return EnumMathOperation.PLUS;
         } else if (firstAction.equals('-')) {
-            return mathOperation.MINUS;
+            return EnumMathOperation.MINUS;
         } else if (firstAction.equals('*')) {
-            return mathOperation.MULTIPLY;
+            return EnumMathOperation.MULTIPLY;
         } else if (firstAction.equals('/')) {
-            return mathOperation.DIVIDE;
+            return EnumMathOperation.DIVIDE;
         }
-        return mathOperation.MIXED;
+        return EnumMathOperation.MIXED;
     }
 
-    public enum Type {CHAR, NUMBER}
-
-    /**
-     * 0=mixed
-     * 1=+
-     * 2=-
-     * 3=*
-     * 4=/
-     */
-    public enum mathOperation {
-        MIXED, PLUS, MINUS, MULTIPLY, DIVIDE
-    }
 }

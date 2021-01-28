@@ -1,15 +1,20 @@
 package ua.ho.godex.mblogic.classes;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Spec {
     private static final char[] charArray = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     private char character;// cher
     private int value;// integer value
-    private boolean cantBeZero = false;//не может быть 0
+    private boolean canBeZero = true;//не может быть 0
 
-    public Spec(char character, int value, boolean cantBeZero) {
+    public Spec(char character, int value, boolean canBeZero) {
         this.character = character;
         this.value = value;
-        this.cantBeZero = cantBeZero;
+        this.canBeZero = canBeZero;
     }
 
     public Spec(char character, int value) {
@@ -17,31 +22,7 @@ public class Spec {
         this.value = value;
     }
 
-    public boolean getCantBeZero() {
-        return cantBeZero;
-    }
-
-    public boolean isNotZero() {
-        return (value == 0);
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public char getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(char character) {
-        this.character = character;
-    }
-
     public char getValChar() {
-        return charArray[value];
+        return Integer.toString(value).charAt(0);
     }
 }
