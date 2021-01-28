@@ -1,34 +1,41 @@
 package ua.ho.godex.mblogic.classes;
 
 
+import lombok.extern.log4j.Log4j2;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Created by tf101 on 05.10.14.
  */
+@Log4j2
 public class MathBrute {
     private static final int COUNT_LIMIT = 10000000;
-    private static boolean debug = false;
-    private static boolean filterLastNumber = false;// фильтр по последним цыфрам
+    private static boolean debugMode = true;
+    private static boolean filterLastNumber = false;                // filter by last digits
 
-    private ArrayList<Double> numbers = new ArrayList<>(); // array of numbers
-    private ArrayList<String> numbersStr = new ArrayList<>(); // array of symbol numbers
+    private ArrayList<Double> numbers = new ArrayList<>();          // array of numbers
+    private ArrayList<String> numbersStr = new ArrayList<>();       // array of symbol numbers
     private ArrayList<Character> actions = new ArrayList<>();       // array of do
     private ArrayList<Spec> simbols = new ArrayList<>();
-    private Double intResult;//result string
-    private String intString;// result string after replace
-    private ArrayList<Integer> lastNumbers = new ArrayList<>();// last number of numeric
-    private boolean findAllAnswers = false;
+    private Double intResult;                                       //result string
+    private String intString;                                       // result string after replace
+    private ArrayList<Integer> lastNumbers = new ArrayList<>();     // last number of numeric
+    private boolean findAllAnswers;
     private ArrayList<MathBruteResult> resultArray = new ArrayList<>();
     private String inputString;
     private Integer iterationCounter = 0;
-    private EnumType enumTypeOfTask;
     private EnumMathOperation actionsType = EnumMathOperation.MIXED;
 
     public MathBrute(String string) {
+        this(string, false);
+    }
+
+    public MathBrute(String string, Boolean findAllAnswers) {
         this.inputString = string;
-        this.findAllAnswers = false;
-        this.enumTypeOfTask = EnumType.CHAR;
+        this.findAllAnswers = findAllAnswers;
     }
 
     public String getResultOfCalculation() {
@@ -53,7 +60,7 @@ public class MathBrute {
     }
 
     /**
-     * Сброс расчетов
+     * Reset calculations
      */
     private void reset() {
         for (Spec simbol : this.simbols) {
@@ -67,44 +74,40 @@ public class MathBrute {
     private void prepare() {
         inputString = inputString.replace(" ", "");
         inputString = inputString.toLowerCase();
-        if (enumTypeOfTask == EnumType.NUMBER) {
-            sliceIntString(inputString);
+
+        numbersStr.addAll(Arrays.asList(inputString.split("[^0-9a-zA-Zа-яА-Я]+")));
+
+        for (String one : inputString.split("[0-9a-zA-Zа-яА-Я]+")) {
+            if (one.length() > 0)
+                actions.add(one.charAt(0));
         }
-        if (enumTypeOfTask == EnumType.CHAR) {
-            for (String one : inputString.split("[^0-9a-zA-Zа-яА-Я]+")) {
-                numbersStr.add(one);
-            }
-            for (String one : inputString.split("[0-9a-zA-Zа-яА-Я]+")) {
-                if (one.length() > 0)
-                    actions.add(one.charAt(0));
-            }
-            actionsType = getActionType();
+        actionsType = getActionType();
 
-            //sobraty simvolu
-            ArrayList<Character> allchar = new ArrayList<>();       // array of do
-            for (String numeric : numbersStr) { //for every numeric
-                for (Character character : numeric.toCharArray()) {//for every character
-                    if (!allchar.contains(character)) {
-                        allchar.add(character);
-                        if (character.equals(numeric.charAt(0)))
-                            simbols.add(new Spec(character, 1, false));// if char firs in numeric
-                        else
-                            simbols.add(new Spec(character, 0));// if char not firs in numeric
+        //sobraty simvolu
+        ArrayList<Character> allchar = new ArrayList<>();       // array of do
+        for (String numeric : numbersStr) { //for every numeric
+            for (Character character : numeric.toCharArray()) {//for every character
+                if (!allchar.contains(character)) {
+                    allchar.add(character);
+                    if (character.equals(numeric.charAt(0)))
+                        simbols.add(new Spec(character, 1, false));// if char firs in numeric
+                    else
+                        simbols.add(new Spec(character, 0));// if char not firs in numeric
 
-                    } else {
-                        if (allchar.contains(character) && character.equals(numeric.charAt(0))) {
-                            for (Spec spec : simbols) {
-                                if (spec.getCharacter() == character) {
-                                    spec.setIntValue(1);
-                                }
+                } else {
+                    if (allchar.contains(character) && character.equals(numeric.charAt(0))) {
+                        for (Spec spec : simbols) {
+                            if (spec.getCharacter() == character) {
+                                spec.setIntValue(1);
                             }
                         }
                     }
                 }
             }
-            //delete result from numbers
-            numbersStr.remove(numbersStr.size() - 1);
         }
+        //delete result from numbers
+        numbersStr.remove(numbersStr.size() - 1);
+
     }
 
     private void mathResultStr() {
@@ -116,7 +119,7 @@ public class MathBrute {
             }
             this.iterationCounter++;
             if (this.iterationCounter > COUNT_LIMIT) {
-                System.out.println("!!!!!!!!!this.iteration>" + COUNT_LIMIT);
+                log.warn("!!!!!!!!!this.iteration> {}", COUNT_LIMIT);
                 break;
             }
             charInc(0);
@@ -134,14 +137,14 @@ public class MathBrute {
             if (colision)
                 continue;
             copyStrToInt();
-            //todo а фильтр то не готов
+            //todo filter not ready
             if (filterLastNumber && actionsType != EnumMathOperation.MIXED) {
                 for (Double last : this.numbers) {
                     lastNumbers.add(last.intValue() % 10);
                 }
                 if (actionsType == EnumMathOperation.PLUS) {
                     int sum = 0;
-                    //todo вынисти счетчик сколько цыфр в другое место
+                    //todo extract counter how many numbers in better place
                     int numbers = lastNumbers.size();
                     for (int count = 0; count < numbers - 1; count++) {
                         sum += lastNumbers.get(count);
@@ -154,26 +157,17 @@ public class MathBrute {
                         continue;
                 }
             }
-            if (debug) {
-                System.out.println(showValues());
+            if (debugMode) {
+                log.debug(showValues());
             }
             if (this.mathResult().equals(intResult)) {
-                /*stringBuilder = new StringBuilder();
-                for (Spec spec : simbols) {
-                    stringBuilder.append(spec.getCharacter() + ":" + spec.getValue() + "|");
-                }
-                ressultArray.add(stringBuilder.toString());*/
                 resultArray.add(new MathBruteResult(inputString, intString));
             }
         }
     }
 
     private String showValues() {
-        StringBuilder builder = new StringBuilder();
-        for (Spec spec : simbols) {
-            builder.append(spec.getCharacter() + ":" + spec.getIntValue() + "|");
-        }
-        return builder.toString();
+        return simbols.stream().map(spec -> spec.getCharacter() + "->" + spec.getIntValue() + "|").collect(Collectors.joining());
     }
 
     /**
@@ -181,13 +175,10 @@ public class MathBrute {
      */
     private void copyStrToInt() {//copy array of char numbers to integer with replace
         intString = inputString;
-        for (int sim = 0; sim < simbols.size(); sim++) {
-            intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValAsChar());
-        }/**/
+        simbols.forEach(simbol -> intString = intString.replace(simbol.getCharacter(), simbol.getValAsChar()));
 
         sliceIntString(intString);
-        /**/
-        //todo попробовать склеивать по точке заменять символы и розделять на числа
+        //todo try glue by dot, replace charters and split to numbers
     }
 
     /**
@@ -197,32 +188,32 @@ public class MathBrute {
         ArrayList<Double> numberstmp = numbers;
         int pos = 0;
         boolean spec = false;
-        Double tmpdouble = null;
+        Double tmpDouble = null;
         Double ret = numberstmp.get(0);
         if (actionsType == EnumMathOperation.MIXED) {
             for (int diya = 0; diya < actions.size(); diya++) {
                 if (actions.get(diya) == '*') {
-                    if (spec == false) {
+                    if (!spec) {
                         pos = diya;
-                        tmpdouble = numberstmp.get(diya);
+                        tmpDouble = numberstmp.get(diya);
                     }
                     spec = true;
-                    tmpdouble *= numberstmp.get(diya + 1);
+                    tmpDouble *= numberstmp.get(diya + 1);
                 }
                 if (actions.get(diya) == '/') {
-                    if (spec == false) {
+                    if (!spec) {
                         pos = diya;
-                        tmpdouble /= numberstmp.get(diya);
+                        tmpDouble /= numberstmp.get(diya);
                     }
                     spec = true;
-                    tmpdouble /= numberstmp.get(diya + 1);
+                    tmpDouble /= numberstmp.get(diya + 1);
                 }
-                if ((actions.get(diya) == '+' || actions.get(diya) == '-') && spec == true) {
-                    numberstmp.set(pos, tmpdouble);
+                if ((actions.get(diya) == '+' || actions.get(diya) == '-') && spec) {
+                    numberstmp.set(pos, tmpDouble);
                     spec = false;
                 }
-                if (diya + 1 == actions.size() && spec == true) {
-                    numberstmp.set(pos, tmpdouble);
+                if (diya + 1 == actions.size() && spec) {
+                    numberstmp.set(pos, tmpDouble);
                     spec = false;
                 }
             }
@@ -269,10 +260,7 @@ public class MathBrute {
     private EnumMathOperation getActionType() {
         Character firstAction = actions.get(0);
         for (Character character : actions) {
-            if (firstAction.equals(character) || character.equals('='))
-                continue;
-            else
-                return EnumMathOperation.MIXED;
+            if (!firstAction.equals(character) && !character.equals('=')) return EnumMathOperation.MIXED;
         }
         if (firstAction.equals('+')) {
             return EnumMathOperation.PLUS;
