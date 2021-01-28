@@ -44,7 +44,7 @@
             android:onClick="brute"
             android:id="@+id/run"
             android:layout_gravity="center_horizontal"
-            />
+    />
 
     <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"

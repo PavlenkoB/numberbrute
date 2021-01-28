@@ -16,8 +16,8 @@
 
     <modules>
         <module>logic</module>
-        <module>numberbrutepc</module>
-<!--        <module>numberbruteandroid</module>-->
+        <module>numberbrute-pc</module>
+        <!--        <module>numberbrute-android</module>-->
     </modules>
 
     <properties>

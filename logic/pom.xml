@@ -7,12 +7,11 @@
     <parent>
         <artifactId>numberbrute</artifactId>
         <groupId>ua.ho.godex</groupId>
-        <version>RELEASE</version>
+        <version>1.0</version>
     </parent>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
-
-    <artifactId>logic</artifactId>
+    <artifactId>numberbrute-logic</artifactId>
     <version>1.0</version>
 
     <dependencies>
