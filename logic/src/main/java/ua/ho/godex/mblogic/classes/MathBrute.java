@@ -37,16 +37,16 @@ public class MathBrute {
         if (resultArray.isEmpty()) {
             throw new ArrayIndexOutOfBoundsException("Result array is empty");
         }
-        return resultArray.get(0).getResult();
+        return resultArray.get(0).getResultString();
     }
 
     public void charInc(Integer index) {
-        simbols.get(index).setValue(simbols.get(index).getValue() + 1);
-        if (simbols.get(index).getValue() > 9 && (index < simbols.size() - 1)) {
+        simbols.get(index).setIntValue(simbols.get(index).getIntValue() + 1);
+        if (simbols.get(index).getIntValue() > 9 && (index < simbols.size() - 1)) {
             if (simbols.get(index).isCanBeZero())
-                simbols.get(index).setValue(0);
+                simbols.get(index).setIntValue(0);
             else
-                simbols.get(index).setValue(1);
+                simbols.get(index).setIntValue(1);
             charInc(index + 1);
         }
 
@@ -57,7 +57,7 @@ public class MathBrute {
      */
     private void reset() {
         for (Spec simbol : this.simbols) {
-            simbol.setValue(0);
+            simbol.setIntValue(0);
         }
         this.resultArray.clear();
         this.numbersStr.clear();
@@ -95,7 +95,7 @@ public class MathBrute {
                         if (allchar.contains(character) && character.equals(numeric.charAt(0))) {
                             for (Spec spec : simbols) {
                                 if (spec.getCharacter() == character) {
-                                    spec.setValue(1);
+                                    spec.setIntValue(1);
                                 }
                             }
                         }
@@ -110,7 +110,7 @@ public class MathBrute {
     private void mathResultStr() {
         this.prepare();
         boolean colision;
-        while (simbols.get(simbols.size() - 1).getValue() < 10) {
+        while (simbols.get(simbols.size() - 1).getIntValue() < 10) {
             if (!resultArray.isEmpty() && !findAllAnswers) {
                 break;
             }
@@ -123,7 +123,7 @@ public class MathBrute {
             colision = false;
             for (Spec spec : simbols) {
                 for (Spec spec1 : simbols) {
-                    if (spec1.getValue() == spec.getValue() && spec1.getCharacter() != spec.getCharacter()) {
+                    if (spec1.getIntValue() == spec.getIntValue() && spec1.getCharacter() != spec.getCharacter()) {
                         colision = true;
                         break;
                     }
@@ -171,7 +171,7 @@ public class MathBrute {
     private String showValues() {
         StringBuilder builder = new StringBuilder();
         for (Spec spec : simbols) {
-            builder.append(spec.getCharacter() + ":" + spec.getValue() + "|");
+            builder.append(spec.getCharacter() + ":" + spec.getIntValue() + "|");
         }
         return builder.toString();
     }
@@ -182,7 +182,7 @@ public class MathBrute {
     private void copyStrToInt() {//copy array of char numbers to integer with replace
         intString = inputString;
         for (int sim = 0; sim < simbols.size(); sim++) {
-            intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValChar());
+            intString = intString.replace(simbols.get(sim).getCharacter(), simbols.get(sim).getValAsChar());
         }/**/
 
         sliceIntString(intString);

@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class MathBruteResult {
-    private String input;
-    private String result;
+    private String inputString;
+    private String resultString;
 }
