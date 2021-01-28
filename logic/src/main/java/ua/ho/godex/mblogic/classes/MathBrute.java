@@ -5,10 +5,18 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import static ua.ho.godex.mblogic.classes.EnumMathOperation.DIVIDE;
+import static ua.ho.godex.mblogic.classes.EnumMathOperation.EQUALS;
+import static ua.ho.godex.mblogic.classes.EnumMathOperation.MINUS;
+import static ua.ho.godex.mblogic.classes.EnumMathOperation.MIXED;
+import static ua.ho.godex.mblogic.classes.EnumMathOperation.MULTIPLY;
+import static ua.ho.godex.mblogic.classes.EnumMathOperation.PLUS;
+
 /**
- * Created by tf101 on 05.10.14.
+ * Created by Bohdan Povlenko on 05.10.14.
  */
 @Log4j2
 public class MathBrute {
@@ -16,15 +24,15 @@ public class MathBrute {
     private static boolean debugMode = true;
     private static boolean filterLastNumber = false;                // filter by last digits
 
-    private ArrayList<Double> numbers = new ArrayList<>();          // array of numbers
-    private ArrayList<String> numbersStr = new ArrayList<>();       // array of symbol numbers
-    private ArrayList<Character> actions = new ArrayList<>();       // array of do
-    private ArrayList<Spec> simbols = new ArrayList<>();
+    private List<Double> numbers = new ArrayList<>();          // array of numbers
+    private List<String> numbersStr = new ArrayList<>();       // array of symbol numbers
+    private List<EnumMathOperation> actions = new ArrayList<>();       // array of do
+    private List<Spec> simbols = new ArrayList<>();
     private Double intResult;                                       //result string
     private String intString;                                       // result string after replace
-    private ArrayList<Integer> lastNumbers = new ArrayList<>();     // last number of numeric
+    private List<Integer> lastNumbers = new ArrayList<>();     // last number of numeric
     private boolean findAllAnswers;
-    private ArrayList<MathBruteResult> resultArray = new ArrayList<>();
+    private List<MathBruteResult> resultArray = new ArrayList<>();
     private String inputString;
     private Integer iterationCounter = 0;
     private EnumMathOperation actionsType = EnumMathOperation.MIXED;
@@ -79,7 +87,7 @@ public class MathBrute {
 
         for (String one : inputString.split("[0-9a-zA-Zа-яА-Я]+")) {
             if (one.length() > 0)
-                actions.add(one.charAt(0));
+                actions.add(EnumMathOperation.fromChar(one.charAt(0)));
         }
         actionsType = getActionType();
 
@@ -152,7 +160,7 @@ public class MathBrute {
                     if (sum % 10 != lastNumbers.get(numbers - 1)) {
                         continue;
                     }
-                } else if (actionsType == EnumMathOperation.MULTIPLY) {
+                } else if (actionsType == MULTIPLY) {
                     if ((lastNumbers.get(0) * lastNumbers.get(1)) % 10 != lastNumbers.get(2))
                         continue;
                 }
@@ -185,44 +193,42 @@ public class MathBrute {
      * @return sum of all numbers
      */
     public Double mathResult() {
-        ArrayList<Double> numberstmp = numbers;
+        List<Double> numberstmp = numbers;
         int pos = 0;
         boolean spec = false;
         Double tmpDouble = null;
         Double ret = numberstmp.get(0);
         if (actionsType == EnumMathOperation.MIXED) {
-            for (int diya = 0; diya < actions.size(); diya++) {
-                if (actions.get(diya) == '*') {
+            for (int action = 0; action < actions.size(); action++) {
+                if (actions.get(action).equals(MULTIPLY)) {
                     if (!spec) {
-                        pos = diya;
-                        tmpDouble = numberstmp.get(diya);
+                        pos = action;
                     }
                     spec = true;
-                    tmpDouble *= numberstmp.get(diya + 1);
+                    tmpDouble *= numberstmp.get(action + 1);
                 }
-                if (actions.get(diya) == '/') {
+                if (actions.get(action) == DIVIDE) {
                     if (!spec) {
-                        pos = diya;
-                        tmpDouble /= numberstmp.get(diya);
+                        pos = action;
                     }
                     spec = true;
-                    tmpDouble /= numberstmp.get(diya + 1);
+                    tmpDouble /= numberstmp.get(action + 1);
                 }
-                if ((actions.get(diya) == '+' || actions.get(diya) == '-') && spec) {
+                if ((actions.get(action) == PLUS || actions.get(action) == MINUS) && spec) {
                     numberstmp.set(pos, tmpDouble);
                     spec = false;
                 }
-                if (diya + 1 == actions.size() && spec) {
+                if (action + 1 == actions.size() && spec) {
                     numberstmp.set(pos, tmpDouble);
                     spec = false;
                 }
             }
             ret = numberstmp.get(0);
             for (int diya = 0; diya < actions.size(); diya++) {
-                if (actions.get(diya) == '+') {
+                if (actions.get(diya) == PLUS) {
                     ret += numberstmp.get(diya + 1);
                 }
-                if (actions.get(diya) == '-') {
+                if (actions.get(diya) == MINUS) {
                     ret -= numberstmp.get(diya + 1);
                 }
             }
@@ -232,7 +238,7 @@ public class MathBrute {
                     ret += numberstmp.get(poz);
                 } else if (actionsType == EnumMathOperation.MINUS) {
                     ret -= numberstmp.get(poz);
-                } else if (actionsType == EnumMathOperation.MULTIPLY) {
+                } else if (actionsType == MULTIPLY) {
                     ret *= numberstmp.get(poz);
                 } else if (actionsType == EnumMathOperation.DIVIDE) {
                     ret /= numberstmp.get(poz);
@@ -258,20 +264,20 @@ public class MathBrute {
     }
 
     private EnumMathOperation getActionType() {
-        Character firstAction = actions.get(0);
-        for (Character character : actions) {
-            if (!firstAction.equals(character) && !character.equals('=')) return EnumMathOperation.MIXED;
+        EnumMathOperation firstAction = actions.get(0);
+        for (EnumMathOperation character : actions) {
+            if (!firstAction.equals(character) && !character.equals(EQUALS)) return EnumMathOperation.MIXED;
         }
-        if (firstAction.equals('+')) {
-            return EnumMathOperation.PLUS;
-        } else if (firstAction.equals('-')) {
-            return EnumMathOperation.MINUS;
-        } else if (firstAction.equals('*')) {
-            return EnumMathOperation.MULTIPLY;
-        } else if (firstAction.equals('/')) {
-            return EnumMathOperation.DIVIDE;
+        if (firstAction.equals(PLUS)) {
+            return PLUS;
+        } else if (firstAction.equals(MINUS)) {
+            return MINUS;
+        } else if (firstAction.equals(MULTIPLY)) {
+            return MULTIPLY;
+        } else if (firstAction.equals(DIVIDE)) {
+            return DIVIDE;
         }
-        return EnumMathOperation.MIXED;
+        return MIXED;
     }
 
 }
