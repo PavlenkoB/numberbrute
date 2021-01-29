@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import static ua.ho.godex.mblogic.classes.EnumMathOperation.DIVIDE;
 import static ua.ho.godex.mblogic.classes.EnumMathOperation.EQUALS;
 import static ua.ho.godex.mblogic.classes.EnumMathOperation.MINUS;
-import static ua.ho.godex.mblogic.classes.EnumMathOperation.MIXED;
 import static ua.ho.godex.mblogic.classes.EnumMathOperation.MULTIPLY;
 import static ua.ho.godex.mblogic.classes.EnumMathOperation.PLUS;
 
@@ -186,48 +185,35 @@ public class MathBrute {
      * @return sum of all numbers
      */
     private Double mathResult(List<Double> numbers, EnumMathOperation actionsType) {
-        List<Double> numbersTmp = numbers;
-        int pos = 0;
-        boolean spec = false;
-        Double tmpDouble = null;
-        Double ret = numbersTmp.get(0);
+        Double ret;
         if (actionsType == EnumMathOperation.MIXED) {
+            double tmpDouble = 0;
+            int pos = 0;
+            boolean spec = false;
             for (int action = 0; action < actionsArr.size(); action++) {
-                if (actionsArr.get(action).equals(MULTIPLY)) {
+                EnumMathOperation enumMathOperation = actionsArr.get(action);
+                if (enumMathOperation == MULTIPLY || enumMathOperation == DIVIDE) {
                     if (!spec) {
                         pos = action;
                     }
                     spec = true;
-                    tmpDouble *= numbersTmp.get(action + 1);
-                }
-                if (actionsArr.get(action) == DIVIDE) {
-                    if (!spec) {
-                        pos = action;
-                    }
-                    spec = true;
-                    tmpDouble /= numbersTmp.get(action + 1);
-                }
-                if ((actionsArr.get(action) == PLUS || actionsArr.get(action) == MINUS) && spec) {
-                    numbersTmp.set(pos, tmpDouble);
+                    tmpDouble = extractFunction(enumMathOperation).applyAsDouble(numbers.get(action), numbers.get(action + 1));
+                } else if ((enumMathOperation == PLUS || enumMathOperation == MINUS) && spec) {
+                    numbers.set(pos, tmpDouble);
                     spec = false;
                 }
                 if (action + 1 == actionsArr.size() && spec) {
-                    numbersTmp.set(pos, tmpDouble);
+                    numbers.set(pos, tmpDouble);
                     spec = false;
                 }
             }
-
-            ret = numbersTmp.get(0);
+            ret = numbers.get(0);
             for (int diya = 0; diya < actionsArr.size(); diya++) {
-                if (actionsArr.get(diya) == PLUS) {
-                    ret += numbersTmp.get(diya + 1);
-                }
-                if (actionsArr.get(diya) == MINUS) {
-                    ret -= numbersTmp.get(diya + 1);
-                }
+                ret = extractFunction(actionsArr.get(diya))
+                        .applyAsDouble(ret, numbers.get(diya + 1));
             }
         } else {
-            ret = numbersTmp.stream()
+            ret = numbers.stream()
                     .mapToDouble(value -> value)
                     .reduce(extractFunction(actionsType))
                     .getAsDouble();
@@ -235,40 +221,23 @@ public class MathBrute {
         return ret;
     }
 
-    private DoubleBinaryOperator extractFunction(EnumMathOperation actionsType) throws RuntimeException {
-        switch (actionsType) {
-            case PLUS:
-                return (a, b) -> a + b;
-            case MINUS:
-                return (a, b) -> a - b;
-            case MULTIPLY:
-                return (a, b) -> a * b;
-            case DIVIDE:
-                return (a, b) -> a / b;
-        }
-        throw new RuntimeException("Unsupported action type");
+    private DoubleBinaryOperator extractFunction(EnumMathOperation actionsType) {
+        if (actionsType == PLUS) return Double::sum;
+        else if (actionsType == MINUS) return (a, b) -> a - b;
+        else if (actionsType == MULTIPLY) return (a, b) -> a * b;
+        else if (actionsType == DIVIDE) return (a, b) -> a / b;
+        throw new UnsupportedOperationException("Unsupported action type");
     }
 
     private List<Double> sliceIntStringToNumbersArray(String string) {
-
         return Arrays.stream(string.split(REGEX_FOR_EXTRACT_NUMBERS)).map(Double::parseDouble).collect(Collectors.toList());
     }
 
     private EnumMathOperation identifyActionType(final List<EnumMathOperation> actionsArr) {
         EnumMathOperation firstAction = actionsArr.get(0);
-        for (EnumMathOperation character : actionsArr) {
-            if (!firstAction.equals(character) && !character.equals(EQUALS)) return EnumMathOperation.MIXED;
+        for (EnumMathOperation action : actionsArr) {
+            if (!firstAction.equals(action) && !action.equals(EQUALS)) return EnumMathOperation.MIXED;
         }
-        if (firstAction.equals(PLUS)) {
-            return PLUS;
-        } else if (firstAction.equals(MINUS)) {
-            return MINUS;
-        } else if (firstAction.equals(MULTIPLY)) {
-            return MULTIPLY;
-        } else if (firstAction.equals(DIVIDE)) {
-            return DIVIDE;
-        }
-        return MIXED;
+        return firstAction;
     }
-
 }
