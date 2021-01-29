@@ -28,13 +28,8 @@ public class MathBrute {
     private static final boolean DEBUG_MODE = true;
     private static final boolean FILTER_BY_LAST_NUMBER = false;
 
-    private final List<Integer> lastNumbers = new ArrayList<>();
     private final boolean findAllAnswers;
-    private final List<MathBruteResult> resultArray = new ArrayList<>();
     private final String inputStringTrimmed;
-
-    private List<EnumMathOperation> actionsArr;
-    private Integer iterationCounter = 0;
 
     public MathBrute(String string) {
         this(string, false);
@@ -43,18 +38,17 @@ public class MathBrute {
     public MathBrute(String string, Boolean findAllAnswers) {
         this.inputStringTrimmed = string.replace(" ", "").toLowerCase();
         this.findAllAnswers = findAllAnswers;
-        this.actionsArr = getActionArr(inputStringTrimmed);
     }
 
     public String getResultOfCalculation() {
-        this.mathResultStr();
+        List<MathBruteResult> resultArray = this.mathResultStr(this.inputStringTrimmed);
         if (!resultArray.isEmpty()) {
             return resultArray.get(0).getResultString();
         }
         throw new ArrayIndexOutOfBoundsException("Result array is empty");
     }
 
-    private List<EnumMathOperation> getActionArr(String inputStringTrimmed) {
+    private List<EnumMathOperation> getActionsArr(String inputStringTrimmed) {
         return Arrays.stream(inputStringTrimmed.split(REGEX_FOR_EXTRACT_ACTIONS))
                 .filter(one -> one.length() > 0)
                 .map(one -> EnumMathOperation.fromChar(one.charAt(0)))
@@ -89,18 +83,25 @@ public class MathBrute {
         return localSymbols;
     }
 
-    private void mathResultStr() {
+    private List<MathBruteResult> mathResultStr(String inputStringTrimmed) {
+        Long iterationCounter = 0L;
         List<Spec> symbolsArr = extractSymbols(inputStringTrimmed);
-        EnumMathOperation actionsType = identifyActionType(this.actionsArr);
+        List<EnumMathOperation> actionsArr = getActionsArr(inputStringTrimmed);
+        EnumMathOperation actionsType = identifyActionType(actionsArr);
+
+        final List<Integer> lastNumbers = new ArrayList<>();
+
+        final List<MathBruteResult> resultArray = new ArrayList<>();
+
         while (true) {
             if (!(symbolsArr.get(symbolsArr.size() - 1).getIntValue() < MAX_POSSIBLE_NUMBER)) break;
             if (!resultArray.isEmpty() && !findAllAnswers) break;
-            checkIterrator();
+            checkIterator(iterationCounter);
 
             charInc(symbolsArr, 0);
             if (isSymbolsHasCollision(symbolsArr)) continue;
 
-            String stringWithCharsToNumbers = transformStringWithCharsToNumbers(this.inputStringTrimmed, symbolsArr);
+            String stringWithCharsToNumbers = transformStringWithCharsToNumbers(inputStringTrimmed, symbolsArr);
             List<Double> stringNumbers = sliceIntStringToNumbersArray(stringWithCharsToNumbers);
             Double calculationResult = stringNumbers.remove(stringNumbers.size() - 1);
             //todo filter not ready
@@ -126,17 +127,18 @@ public class MathBrute {
             if (DEBUG_MODE) {
                 log.debug(showValues(symbolsArr));
             }
-            if (this.mathResult(stringNumbers, actionsType).equals(calculationResult)) {
+            if (this.mathResult(stringNumbers, actionsType, actionsArr).equals(calculationResult)) {
                 resultArray.add(new MathBruteResult(inputStringTrimmed, stringWithCharsToNumbers));
             }
         }
+        return resultArray;
     }
 
-    private void checkIterrator() {
-        this.iterationCounter++;
-        if (this.iterationCounter > ITERATION_LIMIT) {
+    private void checkIterator(Long iterationCounter) {
+        iterationCounter++;
+        if (iterationCounter > ITERATION_LIMIT) {
             log.error("ITERATION_LIMIT reached {}", ITERATION_LIMIT);
-            throw new RuntimeException("ITERATION_LIMIT reached " + ITERATION_LIMIT);
+            throw new UnsupportedOperationException("ITERATION_LIMIT reached " + ITERATION_LIMIT);
         }
     }
 
@@ -156,12 +158,10 @@ public class MathBrute {
     }
 
     private void charInc(List<Spec> symbolsArr, Integer index) {
-        symbolsArr.get(index).setIntValue(symbolsArr.get(index).getIntValue() + 1);
-        if (symbolsArr.get(index).getIntValue() > 9 && (index < symbolsArr.size() - 1)) {
-            if (symbolsArr.get(index).isCanBeZero())
-                symbolsArr.get(index).setIntValue(0);
-            else
-                symbolsArr.get(index).setIntValue(1);
+        Spec spec = symbolsArr.get(index);
+        spec.setIntValue(spec.getIntValue() + 1);
+        if (spec.getIntValue() > 9 && (index < symbolsArr.size() - 1)) {
+            spec.setIntValue((spec.isCanBeZero()) ? 0 : 1);
             charInc(symbolsArr, index + 1);
         }
     }
@@ -184,7 +184,7 @@ public class MathBrute {
     /**
      * @return sum of all numbers
      */
-    private Double mathResult(List<Double> numbers, EnumMathOperation actionsType) {
+    private Double mathResult(List<Double> numbers, EnumMathOperation actionsType, List<EnumMathOperation> actionsArr) {
         Double ret;
         if (actionsType == EnumMathOperation.MIXED) {
             double tmpDouble = 0;
