@@ -6,7 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.function.DoubleBinaryOperator;
 import java.util.stream.Collectors;
 
 import static ua.ho.godex.mblogic.classes.EnumMathOperation.DIVIDE;
@@ -216,6 +216,7 @@ public class MathBrute {
                     spec = false;
                 }
             }
+
             ret = numbersTmp.get(0);
             for (int diya = 0; diya < actionsArr.size(); diya++) {
                 if (actionsArr.get(diya) == PLUS) {
@@ -226,23 +227,15 @@ public class MathBrute {
                 }
             }
         } else {
-            //todo use lambda function
-            for (int poz = 1; poz < numbersTmp.size(); poz++) {
-                if (actionsType == EnumMathOperation.PLUS) {
-                    ret += numbersTmp.get(poz);
-                } else if (actionsType == EnumMathOperation.MINUS) {
-                    ret -= numbersTmp.get(poz);
-                } else if (actionsType == MULTIPLY) {
-                    ret *= numbersTmp.get(poz);
-                } else if (actionsType == EnumMathOperation.DIVIDE) {
-                    ret /= numbersTmp.get(poz);
-                }
-            }
+            ret = numbersTmp.stream()
+                    .mapToDouble(value -> value)
+                    .reduce(extractFunction(actionsType))
+                    .getAsDouble();
         }
         return ret;
     }
 
-    private BiFunction<Double, Double, Double> extractFunction(EnumMathOperation actionsType) throws RuntimeException {
+    private DoubleBinaryOperator extractFunction(EnumMathOperation actionsType) throws RuntimeException {
         switch (actionsType) {
             case PLUS:
                 return (a, b) -> a + b;
