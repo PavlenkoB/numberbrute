@@ -2,11 +2,9 @@ apply plugin: 'com.android.application'
 
 description = 'numberbrute android'
 
-project.packageN
-
 android {
     compileSdkVersion 17
-    defaultConfig{
+    defaultConfig {
         applicationId "com.example.abc.test"
         minSdkVersion 17
         targetSdkVersion 17
@@ -23,6 +21,7 @@ android {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.13.1'
+    implementation project(':numberbrute-logic')
+    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
 }
 
