@@ -1,0 +1,6 @@
+
+description = 'numberbrute android'
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'4.13.1'
+}
+
