@@ -1,0 +1,6 @@
+rootProject.name = 'numberbrute'
+include ':numberbrute-logic'
+include ':numberbrute-pc'
+
+project(':numberbrute-logic').projectDir = "$rootDir/logic" as File
+project(':numberbrute-pc').projectDir = "$rootDir/numberbrute-pc" as File

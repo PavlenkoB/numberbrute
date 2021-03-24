@@ -1,0 +1,6 @@
+
+description = ''
+dependencies {
+  compile project(':numberbrute-logic')
+    testCompile group: 'junit', name: 'junit', version:'4.13.1'
+}
