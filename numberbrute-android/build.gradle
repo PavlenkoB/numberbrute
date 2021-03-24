@@ -2,12 +2,23 @@ apply plugin: 'com.android.application'
 
 description = 'numberbrute android'
 
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.2'
+    }
+}
+
 android {
-    compileSdkVersion 17
+    compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.abc.test"
-        minSdkVersion 17
-        targetSdkVersion 17
+        minSdkVersion 26
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -18,10 +29,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
 }
 
 dependencies {
     implementation project(':numberbrute-logic')
-    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
 }
 
