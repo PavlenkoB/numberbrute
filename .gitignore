@@ -8,6 +8,6 @@
 out
 gen
 bin
-logic/target
-numberbrute-android/target
-numberbrute-pc/target
+*/target
+*/build
+.gradle
