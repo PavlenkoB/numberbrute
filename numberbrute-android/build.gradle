@@ -1,6 +1,28 @@
+apply plugin: 'com.android.application'
 
 description = 'numberbrute android'
+
+project.packageN
+
+android {
+    compileSdkVersion 17
+    defaultConfig{
+        applicationId "com.example.abc.test"
+        minSdkVersion 17
+        targetSdkVersion 17
+        versionCode 1
+        versionName "1.0"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version:'4.13.1'
+    testCompile group: 'junit', name: 'junit', version: '4.13.1'
 }
 
