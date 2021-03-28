@@ -10,5 +10,6 @@ gen
 bin
 */target
 */build
+build
 .gradle
 local.properties

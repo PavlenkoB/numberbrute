@@ -35,7 +35,7 @@ public class numberbrute extends Activity {
     TextView optionsTV;
     TextView version;
 
-    MathBrute res;
+    MathBrute mathBrute;
     boolean allResTmp;
 
     private Handler mHandler = new Handler();
@@ -56,8 +56,7 @@ public class numberbrute extends Activity {
         allRes = (CheckBox) findViewById(R.id.allRes);
         run = (Button) findViewById(R.id.run);
         optionsTV = (TextView) findViewById(R.id.options);
-        String tmpString="last="+MathBrute.filterLastNumber+"|sameOperations="+MathBrute.sameOperations;
-        optionsTV.setText(tmpString);
+        optionsTV.setText("__REMOVED__");
         inputText.setText("книга+книга+книга=наука");
 
     }
@@ -119,8 +118,8 @@ public class numberbrute extends Activity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            res = new MathBrute(vuraz, MathBrute.Type.CHAR, allResTmp);
-            res.mathResultStr();
+            mathBrute = new MathBrute(vuraz, allResTmp);
+            mathBrute.startCalculation();
 
             /*full = ((Number) Math.pow(10, res.simbols.size())).intValue();
             while (res.simbols.get(res.simbols.size() - 1).getValue() < 10) {
@@ -174,10 +173,9 @@ public class numberbrute extends Activity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             stringBuilder = new StringBuilder();
-            for (String s : res.ressultArray) {
-                stringBuilder.append(s + "\n");
-            }
-            progressText.setText("Results=" + res.ressultArray.size() / 2);
+            stringBuilder.append(mathBrute.getResultOfCalculation()).append("\n");
+
+            progressText.setText("__REMOVED__");
             console.setText(stringBuilder + "\n" + "time=" + (System.currentTimeMillis() - timer));/**/
             run.setEnabled(true);
         }

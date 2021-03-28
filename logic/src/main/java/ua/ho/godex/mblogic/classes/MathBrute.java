@@ -40,8 +40,12 @@ public class MathBrute {
         this.findAllAnswers = findAllAnswers;
     }
 
+    public List<MathBruteResult> startCalculation(){
+         return this.mathResultStr(this.inputStringTrimmed);
+    }
+
     public String getResultOfCalculation() {
-        List<MathBruteResult> resultArray = this.mathResultStr(this.inputStringTrimmed);
+        List<MathBruteResult> resultArray = this.startCalculation();
         if (!resultArray.isEmpty()) {
             return resultArray.get(0).getResultString();
         }
