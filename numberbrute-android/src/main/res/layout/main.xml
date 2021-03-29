@@ -35,7 +35,8 @@
         android:ems="10"
         android:text="@string/standart"
         android:id="@+id/inputText"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:importantForAutofill="no" />
 
     <Button
         android:layout_width="wrap_content"
