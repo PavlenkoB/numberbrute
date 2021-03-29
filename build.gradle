@@ -11,6 +11,11 @@ allprojects {
 }
 description = 'Подборщик для "Криптарифмы" http://nazva.net/741/'
 
+ext {
+    compileSdkVersion = 28
+    supportLibVersion = "28.0.0"
+}
+
 subprojects {
 
 

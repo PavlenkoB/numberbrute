@@ -14,13 +14,13 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.example.abc.test"
-        minSdkVersion 26
-        targetSdkVersion 26
+        minSdkVersion rootProject.ext.compileSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.32"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -41,9 +41,10 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
+    buildToolsVersion rootProject.ext.supportLibVersion
 }
 
 dependencies {
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation project(':numberbrute-logic')
 }
-

@@ -4,4 +4,5 @@
     <string name="version" translatable="false">1.32</string>
     <string name="btnRun">Run</string>
     <string name="standart">a+fat=ass</string>
+    <string name="extract_all">All</string>
 </resources>

@@ -2,4 +2,5 @@
 <resources>
     <string name="standart">ВЕТКА+ВЕТКА=ДЕРЕВО</string>
     <string name="btnRun">Подобрать</string>
+    <string name="extract_all">Все</string>
 </resources>
