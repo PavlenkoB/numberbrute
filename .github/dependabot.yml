@@ -1,0 +1,15 @@
+version: 2
+updates:
+  # Maintain dependencies for gradle
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+    # Specify labels for pull requests
+    labels:
+      - "dependencies"
+      - "gradle"
+
+    # Allow up to 3 open pull requests from dependabot
+    open-pull-requests-limit: 3
